@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.base;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -4,7 +4,9 @@ import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
-public class AboutFragment extends BaseFragment{
+import com.liushuang.liushuang_video.base.BaseFragment;
+
+public class AboutFragment extends BaseFragment {
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_about;

@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.base;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.liushuang.liushuang_video.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

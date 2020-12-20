@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.hejunlin.superindicatorlibray.CircleIndicator;
 import com.hejunlin.superindicatorlibray.LoopViewPager;
+import com.liushuang.liushuang_video.base.BaseFragment;
 import com.liushuang.liushuang_video.model.Channel;
 
 public class HomeFragment extends BaseFragment {

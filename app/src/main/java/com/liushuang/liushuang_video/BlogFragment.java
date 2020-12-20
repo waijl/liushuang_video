@@ -1,7 +1,6 @@
 package com.liushuang.liushuang_video;
 
 import android.net.http.SslError;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -9,6 +8,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
+import com.liushuang.liushuang_video.base.BaseFragment;
 
 public class BlogFragment extends BaseFragment {
 

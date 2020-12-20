@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.liushuang.liushuang_video.base.BaseActivity;
 
 public class HomeActivity extends BaseActivity {
 
