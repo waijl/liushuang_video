@@ -41,7 +41,7 @@ public class HomeActivity extends BaseActivity {
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
 
         mPreItem = mNavigationView.getMenu().getItem(0);
-        mPreItem.setCheckable(true);
+        mPreItem.setChecked(true);
         initFragment();
         handleNavigationView();
     }
@@ -59,7 +59,7 @@ public class HomeActivity extends BaseActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (mPreItem != null){
-                    mPreItem.setCheckable(false);
+                    mPreItem.setChecked(false);
                 }
                 switch (item.getItemId()){
                     case R.id.navigation_item_video:
@@ -79,7 +79,7 @@ public class HomeActivity extends BaseActivity {
                 }
                 mPreItem = item;
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
-                item.setCheckable(true);
+                item.setChecked(true);
                 return false;
             }
         });
