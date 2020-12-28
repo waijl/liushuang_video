@@ -1,6 +1,13 @@
 package com.liushuang.liushuang_video.api;
 
+import com.liushuang.liushuang_video.AppManager;
+import com.liushuang.liushuang_video.model.Album;
+import com.liushuang.liushuang_video.model.AlbumList;
 import com.liushuang.liushuang_video.model.Channel;
+import com.liushuang.liushuang_video.model.ErrorInfo;
+import com.liushuang.liushuang_video.model.Site;
+import com.liushuang.liushuang_video.model.sohu.Result;
+import com.liushuang.liushuang_video.model.sohu.ResultAlbum;
 import com.liushuang.liushuang_video.utils.OkHttpUtils;
 
 import java.io.IOException;
@@ -40,18 +47,79 @@ public class SohuApi extends BaseSiteApi{
         doGetChannelAlbumsByUrl(url, listener);
     }
 
-    public void doGetChannelAlbumsByUrl(String url, OnGetChannelAlbumListener listener){
+    public void doGetChannelAlbumsByUrl(final String url, final OnGetChannelAlbumListener listener){
         OkHttpUtils.excute(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                if (listener != null){
+                    ErrorInfo errorInfo = buildErrorInfo(url, "doGetChannelAlbumsByUrl", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetChannelAlbumFailed(errorInfo);
+                }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()){
+                    ErrorInfo errorInfo = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetChannelAlbumFailed(errorInfo);
+                    return;
+                }
 
+                // 1、取到数据映射Result
+                // 2、转换ResultAlbum变成Album
+                // 3、Album存到AlbumLis中
+                Result result = AppManager.getGson().fromJson(response.body().string(), Result.class);
+                AlbumList albumList = toConvertAlbumList(result);
+
+                if (albumList != null){
+                    if (albumList.size() > 0 && listener != null){
+                        listener.onGetChannelAlbumSuccess(albumList);
+                    }else {
+                        ErrorInfo errorInfo = buildErrorInfo(url, "doGetChannelAlbumsByUrl", null, ErrorInfo.ERROR_TYPE_DATA_CONVERT);
+                        listener.onGetChannelAlbumFailed(errorInfo);
+                    }
+                }
             }
         });
+    }
+
+    private AlbumList toConvertAlbumList(Result result){
+
+        if (result.getData().getResultAlbumList().size() > 0){
+            AlbumList albumList = new AlbumList();
+            for (ResultAlbum resultAlbum : result.getData().getResultAlbumList()){
+                Album album = new Album(Site.SOHU);
+                album.setAlbumDesc(resultAlbum.getTvDesc());
+                album.setAlbumId(resultAlbum.getAlbumId());
+                album.setHorImgUrl(resultAlbum.getHorHighPic());
+                album.setMainActor(resultAlbum.getMainActor());
+                album.setTip(resultAlbum.getTip());
+                album.setTitle(resultAlbum.getAlbumName());
+                album.setVerImgUrl(resultAlbum.getVerHighPic());
+                album.setDirector(resultAlbum.getDirector());
+                albumList.add(album);
+            }
+            return albumList;
+        }
+        return null;
+    }
+
+    /**
+     * 构建ErrorInfo信息（即出错的信息）
+     * @param url
+     * @param functionName
+     * @param e
+     * @param type
+     * @return
+     */
+    private ErrorInfo buildErrorInfo(String url, String functionName, Exception e, int type){
+        ErrorInfo errorInfo = new ErrorInfo(Site.SOHU, type);
+        errorInfo.setExceptionString(e.getMessage());
+        errorInfo.setFunctionName(functionName);
+        errorInfo.setUrl(url);
+        errorInfo.setTag(TAG);
+        errorInfo.setClassName(TAG);
+        return errorInfo;
     }
     public String getChannelAlbumUrl(Channel channel, int pageNum, int pageSize){
         return String.format(API_CHANNEL_ALBUM_FORMAT, toConvertChannelId(channel), pageNum, pageSize);

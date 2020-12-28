@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.hejunlin.imooc_supervideo.model.Site;
+
 
 /**
  * Created by hejunlin on 17/4/15.

@@ -2,8 +2,6 @@ package com.liushuang.liushuang_video.model.sohu;
 
 import android.util.Log;
 
-import com.hejunlin.imooc_supervideo.model.Album;
-import com.hejunlin.imooc_supervideo.model.AlbumList;
 
 import java.util.ArrayList;
 

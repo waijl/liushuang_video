@@ -33,11 +33,14 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initView() {
         Log.d(TAG, ">> initView");
+        //轮播图插件LoopViewPager
         LoopViewPager viewPager = (LoopViewPager) bindViewId(R.id.looperviewpager);
+        //轮播图中的圆点的定义
         CircleIndicator indicator = (CircleIndicator) bindViewId(R.id.indicator);
         viewPager.setAdapter(new HomePicAdapter(getActivity()));
         viewPager.setLooperPic(true);
         indicator.setViewPager(viewPager);
+
         mGridView = bindViewId(R.id.gv_channel);
         mGridView.setAdapter(new ChannelAdapter());
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

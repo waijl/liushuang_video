@@ -13,6 +13,11 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.liushuang.liushuang_video.base.BaseActivity;
 
+/**
+ * APP首页
+ * 实现了ToolBar与侧滑框DrawerLayout的绑定（单击打开或关闭）
+ * 同时在首页Activity中主体实现运用了Fragment,即各个页面的切换仅仅是Fragment的改变
+ */
 public class HomeActivity extends BaseActivity {
 
     private DrawerLayout mDrawerLayout;

@@ -11,6 +11,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+/**
+ * app启动时的主入口activity
+ */
 public class MainActivity extends Activity {
 
     private SharedPreferences mSharedPreferences;
@@ -42,10 +45,12 @@ public class MainActivity extends Activity {
         init();
     }
 
+    /**
+     * 初始化时，查看是不是第一次运行app,若是，则会开启启动页；若不是，之后直接进入首页
+     */
     private void init() {
         Boolean isFirstIn = mSharedPreferences.getBoolean("mIsFirstIn", true);
         if (isFirstIn){
-
             mHandler.sendEmptyMessageDelayed(GO_GUIDE, ENTEER_DURATION);
         }else{
             mHandler.sendEmptyMessageDelayed(GO_HOME, ENTEER_DURATION);

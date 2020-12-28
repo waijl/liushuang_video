@@ -13,6 +13,9 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import org.w3c.dom.Text;
 
+/**
+ * 首页顶部的轮播图实现
+ */
 public class HomePicAdapter extends PagerAdapter {
 
     private Context mContext;
