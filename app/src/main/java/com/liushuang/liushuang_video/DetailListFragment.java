@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,43 +47,39 @@ public class DetailListFragment extends BaseFragment {
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private static final int REFRESH_DURATION = 1500;
     private static final int LOADMORE_DURATION = 3000;
-    private int pageNum;
+    private int pageNo;
     private int pageSize = 30;
 
-    public DetailListFragment(){
-
+    public DetailListFragment() {
     }
 
-    public static Fragment newInstance(int siteId, int channelId){
+    public static Fragment newInstance(int siteId, int channld) {
         DetailListFragment fragment = new DetailListFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(SITE_ID, siteId);
-        bundle.putInt(CHANNEL_ID, channelId);
-        fragment.setArguments(bundle);
+        bundle.putInt(CHANNEL_ID, channld);
+        fragment.setArguments(bundle); //如:乐视,电视剧页面,fragment需要知道
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null){
+        if (getArguments() != null ) {
             mSiteId = getArguments().getInt(SITE_ID);
             mChannelId = getArguments().getInt(CHANNEL_ID);
         }
-        pageNum = 0;
+        pageNo = 0;
         mAdapter = new DetailListAdapter(getActivity(), new Channel(mChannelId, getActivity()));
-        loadData();
-
-        if (mSiteId == Site.LETV){
+        loadData(); //第一次加载数据
+        if (mSiteId == Site.LETV) { // 乐视下相关频道2列
             mColumns = 2;
             mAdapter.setColumns(mColumns);
-        }else{
+        } else {
             mColumns = 3;
             mAdapter.setColumns(mColumns);
         }
     }
-
 
     @Override
     protected int getLayoutId() {
@@ -90,54 +87,63 @@ public class DetailListFragment extends BaseFragment {
     }
 
     @Override
-    protected void initData() {
-
-    }
-
-    @Override
     protected void initView() {
         mEmptyView = bindViewId(R.id.tv_empty);
         mEmptyView.setText(getActivity().getResources().getString(R.string.load_more_text));
         mRecyclerView = bindViewId(R.id.pullLoadRecyclerView);
-        mRecyclerView.setGridLayout(3);
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setGridLayout(mColumns);
+        mRecyclerView.setAdapter(mAdapter); //
         mRecyclerView.setOnPullLoadMoreListener(new PullLoadMoreListener());
     }
 
-    private void reFreshData(){
-
+    /**
+     * 下拉刷新
+     */
+    private void reRreshData() {
+        // 请求接口,加载数据
+        pageNo = 0;
+        mAdapter = null;
+        mAdapter = new DetailListAdapter(getActivity(), new Channel(mChannelId, getActivity()));
+        loadData(); //第一次加载数据
+        if (mSiteId == Site.LETV) { // 乐视下相关频道2列
+            mColumns = 2;
+            mAdapter.setColumns(mColumns);
+        } else {
+            mColumns = 3;
+            mAdapter.setColumns(mColumns);
+        }
+        mRecyclerView.setAdapter(mAdapter);
+        Toast.makeText(getActivity(), "已加载到最新数据", Toast.LENGTH_LONG).show();
     }
 
-    private void loadData(){
-        pageNum ++;
-        SiteApi.onGetChannelAlbums(getActivity(), pageNum, pageSize, mSiteId, mChannelId, new OnGetChannelAlbumListener() {
+    private void loadData() {
+        // 请求接口,加载更多数据
+        pageNo ++;
+        SiteApi.onGetChannelAlbums(getActivity(), pageNo, pageSize, mSiteId, mChannelId, new OnGetChannelAlbumListener() {
             @Override
             public void onGetChannelAlbumSuccess(AlbumList albumList) {
-                /*for (Album album : albumList) {
-                    Log.d(TAG, ">> album " + album.toString());
-                }*/
-
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         mEmptyView.setVisibility(View.GONE);
                     }
                 });
-
-                for (Album album : albumList){
+                for (Album album : albumList) {
                     mAdapter.setData(album);
                 }
-
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         mAdapter.notifyDataSetChanged();
                     }
                 });
+//                for (Album album : albumList) {
+//                    Log.d(TAG, ">> album " + album.toString());
+//                }
             }
 
             @Override
-            public void onGetChannelAlbumFailed(ErrorInfo errorInfo) {
+            public void onGetChannelAlbumFailed(ErrorInfo info) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -147,14 +153,15 @@ public class DetailListFragment extends BaseFragment {
             }
         });
     }
-    class PullLoadMoreListener implements PullLoadRecyclerView.OnPullLoadMoreListener{
+
+    class PullLoadMoreListener implements PullLoadRecyclerView.OnPullLoadMoreListener {
 
         @Override
         public void reRresh() {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    reFreshData();
+                    reRreshData();
                     mRecyclerView.setRefreshCompleted();
                 }
             }, REFRESH_DURATION);
@@ -172,99 +179,103 @@ public class DetailListFragment extends BaseFragment {
         }
     }
 
-    class DetailListAdapter extends RecyclerView.Adapter{
+    class DetailListAdapter extends RecyclerView.Adapter {
 
         private Context mContext;
         private Channel mChannel;
         private AlbumList mAlbumList = new AlbumList();
         private int mColumns;
 
-        public DetailListAdapter(Context context, Channel channel){
+        public DetailListAdapter(Context context, Channel channel) {
             mContext = context;
             mChannel = channel;
         }
 
-        @NonNull
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.detaillist_item, null);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view  = ((Activity)mContext).getLayoutInflater().inflate(R.layout.detaillist_item, null);
             ItemViewHolder itemViewHolder = new ItemViewHolder(view);
             view.setTag(itemViewHolder);
             return itemViewHolder;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            if (mAlbumList.size() == 0){
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (mAlbumList.size() == 0) {
                 return;
             }
             final Album album = getItem(position);
-            if (holder instanceof ItemViewHolder){
+            if (holder instanceof ItemViewHolder) {
                 ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
                 itemViewHolder.albumName.setText(album.getTitle());
-                if (album.getTip().isEmpty()){
+                if (album.getTip().isEmpty()) {
                     itemViewHolder.albumTip.setVisibility(View.GONE);
-                }else {
+                } else {
                     itemViewHolder.albumTip.setText(album.getTip());
                 }
-
                 Point point = null;
-                if (mColumns == 2){
+                //重新计算宽高
+                if (mColumns == 2) {
                     point = ImageUtils.getHorPostSize(mContext, mColumns);
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(point.x, point.y);
                     itemViewHolder.albumPoster.setLayoutParams(params);
-                }else {
+                } else {
                     point = ImageUtils.getVerPostSize(mContext, mColumns);
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(point.x, point.y);
                     itemViewHolder.albumPoster.setLayoutParams(params);
                 }
 
-                if (album.getVerImgUrl() != null){
+                if (album.getVerImgUrl() != null) {
                     ImageUtils.disPlayImage(itemViewHolder.albumPoster, album.getVerImgUrl(), point.x, point.y);
-                }else if (album.getHorImgUrl() != null){
+                } else if (album.getHorImgUrl() != null){
                     ImageUtils.disPlayImage(itemViewHolder.albumPoster, album.getHorImgUrl(), point.x, point.y);
+                } else {
+                    //TOD 默认图
                 }
-
                 itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        /*if (mChannelId == Channel.DOCUMENTRY|| mChannelId == Channel.MOVIE || mChannelId== Channel.VARIETY || mChannelId == Channel.MUSIC) {
+                            AlbumDetailActivity.launch(getActivity(), album, 0, true);
+                        } else {
+                            AlbumDetailActivity.launch(getActivity(), album);
+                        }*/
                     }
                 });
+
             }
-
-
 
         }
 
-        private Album getItem(int position){
+        private Album getItem(int position) {
             return mAlbumList.get(position);
         }
 
         @Override
         public int getItemCount() {
-            if (mAlbumList.size() > 0){
-                return mAlbumList.size();
+            if (mAlbumList.size() > 0) {
+                return  mAlbumList.size();
             }
             return 0;
         }
 
+        //显示列数
         public void setColumns(int columns){
             mColumns = columns;
         }
 
-        public void setData(Album album){
+        public void setData(Album album) {
             mAlbumList.add(album);
         }
 
-        public class ItemViewHolder extends RecyclerView.ViewHolder{
+        public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-            public LinearLayout resultContainer;
-            public ImageView albumPoster;
-            public TextView albumTip;
-            public TextView albumName;
+            private LinearLayout resultContainer;
+            private ImageView albumPoster;
+            private TextView albumName;
+            private TextView albumTip;
 
-            public ItemViewHolder(@NonNull View view) {
+            public ItemViewHolder(View view) {
                 super(view);
                 resultContainer = (LinearLayout) view.findViewById(R.id.album_container);
                 albumPoster = (ImageView) view.findViewById(R.id.iv_album_poster);
@@ -272,5 +283,11 @@ public class DetailListFragment extends BaseFragment {
                 albumName = (TextView) view.findViewById(R.id.tv_album_name);
             }
         }
+    }
+
+
+    @Override
+    protected void initData() {
+
     }
 }
