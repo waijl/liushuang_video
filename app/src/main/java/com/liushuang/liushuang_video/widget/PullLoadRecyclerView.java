@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.liushuang.liushuang_video.R;
 
+//自定义下拉和刷新view
 public class PullLoadRecyclerView extends LinearLayout {
 
     private Context mContext;
@@ -51,6 +52,7 @@ public class PullLoadRecyclerView extends LinearLayout {
     }
 
     private void initView(Context context) {
+
         mContext = context;
         View view = LayoutInflater.from(mContext).inflate(R.layout.pull_loadmore_layout, null);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
