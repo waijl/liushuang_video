@@ -9,6 +9,13 @@
 
     <include layout="@layout/top_actionbar" />
 
+    <com.liushuang.liushuang_video.indicator.CoolIndicatorLayout
+        android:id="@+id/viewpager_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_80dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:background="@color/white" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"

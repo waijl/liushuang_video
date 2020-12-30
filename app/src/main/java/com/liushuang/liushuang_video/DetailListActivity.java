@@ -9,20 +9,34 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.liushuang.liushuang_video.base.BaseActivity;
+import com.liushuang.liushuang_video.indicator.CoolIndicatorLayout;
+import com.liushuang.liushuang_video.indicator.IPagerIndicatorView;
+import com.liushuang.liushuang_video.indicator.IPagerTitle;
+import com.liushuang.liushuang_video.indicator.ViewPagerITitleView;
+import com.liushuang.liushuang_video.indicator.ViewPagerIndicatorAdapter;
+import com.liushuang.liushuang_video.indicator.ViewPagerIndicatorLayout;
+import com.liushuang.liushuang_video.indicator.ViewPagerWrapper;
+import com.liushuang.liushuang_video.indicator.ViewPaperIndicatorView;
 import com.liushuang.liushuang_video.model.Channel;
 import com.liushuang.liushuang_video.model.Site;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class DetailListActivity extends BaseActivity {
 
     private static final String CHANNEL_ID = "channelId";
     private int mChannelId;
     private ViewPager mViewPager;
+    private String[] mSiteName = new String[]{"搜狐视频", "乐视视频"};
+    private List<String> mDataSet = Arrays.asList(mSiteName);
 
     @Override
     protected int getLayoutId() {
@@ -44,6 +58,46 @@ public class DetailListActivity extends BaseActivity {
         setTitle(titleName);
 
         mViewPager = bindViewId(R.id.pager);
+
+        //自定义的滚动指针
+        CoolIndicatorLayout coolIndicatorLayout = bindViewId(R.id.viewpager_indicator);
+        //组配indicator及title
+        ViewPagerIndicatorLayout viewPagerIndicatorLayout = new ViewPagerIndicatorLayout(this);
+        viewPagerIndicatorLayout.setAdapter(new ViewPagerIndicatorAdapter() {
+            @Override
+            public int getCount() {
+                return mDataSet.size();
+            }
+
+            @Override
+            public IPagerTitle getTitle(Context context, int index) {
+                ViewPagerITitleView viewPagerITitleView = new ViewPagerITitleView(context);
+                viewPagerITitleView.setText(mDataSet.get(index));
+                viewPagerITitleView.setNormalColor(Color.parseColor("#333333"));
+                viewPagerITitleView.setSelectedColor(Color.parseColor("#e94220"));
+                viewPagerITitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewPager.setCurrentItem(index);
+                    }
+                });
+
+                return viewPagerITitleView;
+            }
+
+            @Override
+            public IPagerIndicatorView getIndicator(Context conext) {
+                ViewPaperIndicatorView viewPaperIndicatorView = new ViewPaperIndicatorView(conext);
+                viewPaperIndicatorView.setFillColor(Color.parseColor("#ebe4e3"));
+                return viewPaperIndicatorView;
+            }
+
+        });
+
+        coolIndicatorLayout.setPagerIndicatorLayout(viewPagerIndicatorLayout);
+        //将页面滚动指针与ViewPager相绑定，当ViewPager发生改变时，CoolIndicatorLayout也会发生相应的变化
+        ViewPagerWrapper.with(coolIndicatorLayout, mViewPager).compose();
+
         mViewPager.setAdapter(new SitePagerAdapter(getSupportFragmentManager(), this, mChannelId));
     }
 
