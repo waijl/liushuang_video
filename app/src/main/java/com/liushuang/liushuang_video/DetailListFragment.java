@@ -235,11 +235,12 @@ public class DetailListFragment extends BaseFragment {
                 itemViewHolder.resultContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        /*if (mChannelId == Channel.DOCUMENTRY|| mChannelId == Channel.MOVIE || mChannelId== Channel.VARIETY || mChannelId == Channel.MUSIC) {
+                        if (mChannelId == Channel.DOCUMENTRY|| mChannelId == Channel.MOVIE || mChannelId== Channel.VARIETY || mChannelId == Channel.MUSIC) {
                             AlbumDetailActivity.launch(getActivity(), album, 0, true);
                         } else {
                             AlbumDetailActivity.launch(getActivity(), album);
-                        }*/
+
+                        }
                     }
                 });
 

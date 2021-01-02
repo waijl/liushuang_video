@@ -6,6 +6,7 @@ import com.liushuang.liushuang_video.model.AlbumList;
 import com.liushuang.liushuang_video.model.Channel;
 import com.liushuang.liushuang_video.model.ErrorInfo;
 import com.liushuang.liushuang_video.model.Site;
+import com.liushuang.liushuang_video.model.sohu.DetailResult;
 import com.liushuang.liushuang_video.model.sohu.Result;
 import com.liushuang.liushuang_video.model.sohu.ResultAlbum;
 import com.liushuang.liushuang_video.utils.OkHttpUtils;
@@ -46,6 +47,8 @@ public class SohuApi extends BaseSiteApi{
         String url = getChannelAlbumUrl(channel, pageNum, pageSize);
         doGetChannelAlbumsByUrl(url, listener);
     }
+
+
 
     public void doGetChannelAlbumsByUrl(final String url, final OnGetChannelAlbumListener listener){
         OkHttpUtils.excute(url, new Callback() {
@@ -148,6 +151,41 @@ public class SohuApi extends BaseSiteApi{
                 break;
         }
         return channelId;
+    }
+
+    public void onGetAlbumDetail(final Album album, final OnGetAlbumDetailListener listener) {
+        final String url = API_ALBUM_INFO + album.getAlbumId() + ".json?" + API_KEY;
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetAlbumDetail", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetAlbumDetailFailed(info);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetAlbumDetail", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetAlbumDetailFailed(info);
+                    return;
+                }
+                //Data
+                DetailResult result = AppManager.getGson().fromJson(response.body().string(),  DetailResult.class);
+                if (result.getResultAlbum() != null) {
+                    if (result.getResultAlbum().getLastVideoCount() > 0) {
+                        album.setVideoTotal(result.getResultAlbum().getLastVideoCount());
+                    } else {
+                        album.setVideoTotal(result.getResultAlbum().getTotalVideoCount());
+                    }
+                }
+                //set完数据后,进行通知
+                if (listener != null) {
+                    listener.onGetAlbumDetailSuccess(album);
+                }
+            }
+        });
     }
 
 }

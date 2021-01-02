@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <!-- android:orderInCategory 表示在actionbar中 优先级,值越大,优先级越低,
+    <!-- android:orderInCategory 表示在actionbar中优先级,值越大,优先级越低,
         展示不下时,会到overflow上-->
     <item
         android:id="@+id/action_favor_item"

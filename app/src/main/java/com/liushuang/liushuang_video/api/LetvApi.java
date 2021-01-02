@@ -68,6 +68,7 @@ public class LetvApi extends BaseSiteApi{
         doGetChannelAlbumsByUrl(url, listener);
     }
 
+
     private String getChannelAlbumUrl(Channel channel, int pageNo, int pageSize) {
         if (channel.getChannelId() == Channel.DOCUMENTRY) {
             return String.format(ALBUM_LIST_URL_DOCUMENTARY_FORMAT, conVertChannleId(channel), pageNo, pageSize);
@@ -165,5 +166,10 @@ public class LetvApi extends BaseSiteApi{
         info.setTag(TAG);
         info.setClassName(TAG);
         return info;
+    }
+
+    @Override
+    public void onGetAlbumDetail(Album album, OnGetAlbumDetailListener listener) {
+
     }
 }
