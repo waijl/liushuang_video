@@ -172,4 +172,10 @@ public class LetvApi extends BaseSiteApi{
     public void onGetAlbumDetail(Album album, OnGetAlbumDetailListener listener) {
 
     }
+
+    @Override
+    public void onGetVideo(Album album, int pageSize, int pageNo, OnGetVideoListener listener) {
+
+    }
+
 }

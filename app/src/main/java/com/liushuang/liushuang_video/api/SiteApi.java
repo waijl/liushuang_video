@@ -30,4 +30,21 @@ public class SiteApi {
                 break;
         }
     }
+
+    /**
+     * 取video相关信息
+     * @param album
+     * @param listener
+     */
+    public static void onGetVideo(int pageSize, int pageNo, Album album, OnGetVideoListener listener) {
+        int siteId = album.getSite().getSiteId();
+        switch (siteId) {
+            case Site.LETV:
+                new LetvApi().onGetVideo(album, pageSize, pageNo, listener);
+                break;
+            case Site.SOHU:
+                new SohuApi().onGetVideo(album,  pageSize, pageNo, listener);
+                break;
+        }
+    }
 }

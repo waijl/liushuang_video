@@ -8,4 +8,6 @@ public abstract class BaseSiteApi {
     public abstract void onGetChannelAlbums(Channel channel, int pageNum, int pageSize, OnGetChannelAlbumListener listener);
 
     public abstract void onGetAlbumDetail(Album album, OnGetAlbumDetailListener listener);
+
+    public abstract void onGetVideo(Album album, int pageSize, int pageNo, OnGetVideoListener listener);
 }

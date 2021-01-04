@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.liushuang.liushuang_video.api.OnGetAlbumDetailListener;
 import com.liushuang.liushuang_video.api.SiteApi;
 import com.liushuang.liushuang_video.base.BaseActivity;
+import com.liushuang.liushuang_video.detail.AlbumPlayGridFragment;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.ErrorInfo;
 import com.liushuang.liushuang_video.utils.ImageUtils;
@@ -36,12 +38,12 @@ public class AlbumDetailActivity extends BaseActivity {
     private TextView mMainActor;
     private TextView mAlbumDesc;
     private boolean mIsFavor;
-    /*private AlbumPlayGridFragment mFragment;
+    private AlbumPlayGridFragment mFragment;
     private Button mSuperBitstreamButton;
     private Button mNormalBitstreamButton;
     private Button mHighBitstreamButton;
     private int mCurrentVideoPosition;
-    private CommonDBHelper mFavoriteDBHelper;
+    /*private CommonDBHelper mFavoriteDBHelper;
     private CommonDBHelper mHistoryDBHelper;*/
 
     @Override
@@ -160,6 +162,20 @@ public class AlbumDetailActivity extends BaseActivity {
             @Override
             public void onGetAlbumDetailSuccess(Album album) {
                 Log.d(TAG, ">> onGetAlbumDetailSuccess album" + album.getVideoTotal());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateInfo();
+                        mFragment = AlbumPlayGridFragment.newInstance(mAlbum, mIsShowDesc, 0);
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.fragment_container,mFragment);
+                        ft.commit();
+                        getFragmentManager().executePendingTransactions();
+
+                    }
+                });
+
+
             }
 
             @Override

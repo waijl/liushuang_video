@@ -1,5 +1,7 @@
 package com.liushuang.liushuang_video.api;
 
+import android.util.Log;
+
 import com.liushuang.liushuang_video.AppManager;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.AlbumList;
@@ -9,6 +11,9 @@ import com.liushuang.liushuang_video.model.Site;
 import com.liushuang.liushuang_video.model.sohu.DetailResult;
 import com.liushuang.liushuang_video.model.sohu.Result;
 import com.liushuang.liushuang_video.model.sohu.ResultAlbum;
+import com.liushuang.liushuang_video.model.sohu.Video;
+import com.liushuang.liushuang_video.model.sohu.VideoList;
+import com.liushuang.liushuang_video.model.sohu.VideoResult;
 import com.liushuang.liushuang_video.utils.OkHttpUtils;
 
 import java.io.IOException;
@@ -183,6 +188,53 @@ public class SohuApi extends BaseSiteApi{
                 //set完数据后,进行通知
                 if (listener != null) {
                     listener.onGetAlbumDetailSuccess(album);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onGetVideo(Album album, int pageSize, int pageNo, OnGetVideoListener listener) {
+        String url = String.format(API_ALBUM_VIDOES_FORMAT, album.getAlbumId(), pageNo, pageSize);
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideo", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetVideoFailed(info);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideo", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetVideoFailed(info);
+                    return;
+                }
+
+//                Log.d(TAG, ">> onGetVideo response" + response.body().string());
+
+                VideoResult result = AppManager.getGson().fromJson(response.body().string(), VideoResult.class);
+                if (result != null){
+                    VideoList videoList = new VideoList();
+                    if (result.getData() != null){
+                        for (Video video : result.getData().getVideoList()) {
+                            Video video1 = new Video();
+                            video1.setSite(album.getSite().getSiteId());
+                            video1.setHorHighPic(video.getHorHighPic());
+                            video1.setVerHighPic(video.getVerHighPic());
+                            video1.setVid(video.getVid());
+                            video1.setAid(video.getAid());
+                            video1.setVideoName(video.getVideoName());
+                            videoList.add(video1);
+                        }
+
+                        if (listener != null){
+                            listener.onGetVideoSuccess(videoList);
+                        }
+                    }
+
                 }
             }
         });
