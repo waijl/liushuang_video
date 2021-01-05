@@ -19,11 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liushuang.liushuang_video.api.OnGetAlbumDetailListener;
+import com.liushuang.liushuang_video.api.OnGetVideoPlayUrlListener;
 import com.liushuang.liushuang_video.api.SiteApi;
 import com.liushuang.liushuang_video.base.BaseActivity;
 import com.liushuang.liushuang_video.detail.AlbumPlayGridFragment;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.ErrorInfo;
+import com.liushuang.liushuang_video.model.sohu.Video;
 import com.liushuang.liushuang_video.utils.ImageUtils;
 
 public class AlbumDetailActivity extends BaseActivity {
@@ -167,6 +169,7 @@ public class AlbumDetailActivity extends BaseActivity {
                     public void run() {
                         updateInfo();
                         mFragment = AlbumPlayGridFragment.newInstance(mAlbum, mIsShowDesc, 0);
+                        mFragment.setPlayVideoSelectedListener(mPlayVideoSelectedListener);
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.replace(R.id.fragment_container,mFragment);
                         ft.commit();
@@ -254,13 +257,14 @@ public class AlbumDetailActivity extends BaseActivity {
         activity.startActivity(intent);
     }
 
-    /*private AlbumPlayGridFragment.OnPlayVideoSelectedListener mPlayVideoSelectedListener = new AlbumPlayGridFragment.OnPlayVideoSelectedListener() {
+    private AlbumPlayGridFragment.OnPlayVideoSelectedListener mPlayVideoSelectedListener = new AlbumPlayGridFragment.OnPlayVideoSelectedListener() {
         @Override
         public void OnPlayVideoSelected(Video video, int position) {
             mCurrentVideoPosition = position;
             SiteApi.onGetVideoPlayUrl(video, mVideoUrlListener);
         }
     };
+
 
     public class StreamType {
         public static final int SUPER = 1;
@@ -283,7 +287,6 @@ public class AlbumDetailActivity extends BaseActivity {
                 }
             });
         }
-
         @Override
         public void onGetNoramlUrl(final Video video, final String url) {
             Log.d(TAG,">> onGetNoramlUrl url " + url + ", video " + video);
@@ -330,5 +333,5 @@ public class AlbumDetailActivity extends BaseActivity {
         mSuperBitstreamButton.setVisibility(View.GONE);
         mNormalBitstreamButton.setVisibility(View.GONE);
         mHighBitstreamButton.setVisibility(View.GONE);
-    }*/
+    }
 }

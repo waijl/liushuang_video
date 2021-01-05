@@ -5,6 +5,7 @@ import com.liushuang.liushuang_video.model.AlbumList;
 import com.liushuang.liushuang_video.model.Channel;
 import com.liushuang.liushuang_video.model.ErrorInfo;
 import com.liushuang.liushuang_video.model.Site;
+import com.liushuang.liushuang_video.model.sohu.Video;
 import com.liushuang.liushuang_video.utils.OkHttpUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -175,6 +176,11 @@ public class LetvApi extends BaseSiteApi{
 
     @Override
     public void onGetVideo(Album album, int pageSize, int pageNo, OnGetVideoListener listener) {
+
+    }
+
+    @Override
+    public void onGetVideoPlayUrl(Video video, OnGetVideoPlayUrlListener listener) {
 
     }
 

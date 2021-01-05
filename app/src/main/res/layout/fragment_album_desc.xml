@@ -2,4 +2,22 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <!--android:stretchMode="columnWidth" 缩放与列宽大小同步-->
+    <com.liushuang.liushuang_video.widget.CustomGridView
+        android:id="@+id/gv_video_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="6"
+        android:choiceMode="singleChoice"
+        android:verticalSpacing="@dimen/dimen_8dp"
+        android:horizontalSpacing="@dimen/dimen_8dp"
+        android:stretchMode="columnWidth" />
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="@dimen/dimen_32sp"
+        android:text="@string/no_date_text" />
 </FrameLayout>

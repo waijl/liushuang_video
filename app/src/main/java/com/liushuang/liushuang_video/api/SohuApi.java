@@ -240,4 +240,9 @@ public class SohuApi extends BaseSiteApi{
         });
     }
 
+    @Override
+    public void onGetVideoPlayUrl(Video video, OnGetVideoPlayUrlListener listener) {
+
+    }
+
 }

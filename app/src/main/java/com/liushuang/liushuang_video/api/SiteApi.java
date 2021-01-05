@@ -5,6 +5,7 @@ import android.content.Context;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.Channel;
 import com.liushuang.liushuang_video.model.Site;
+import com.liushuang.liushuang_video.model.sohu.Video;
 
 public class SiteApi {
     public static void onGetChannelAlbums(Context context, int pageNum, int pageSize, int siteId, int channelId, OnGetChannelAlbumListener listener){
@@ -44,6 +45,18 @@ public class SiteApi {
                 break;
             case Site.SOHU:
                 new SohuApi().onGetVideo(album,  pageSize, pageNo, listener);
+                break;
+        }
+    }
+
+    public static void onGetVideoPlayUrl(Video video, OnGetVideoPlayUrlListener listener) {
+        int siteId = video.getSite();
+        switch (siteId){
+            case Site.LETV:
+                new LetvApi().onGetVideoPlayUrl(video, listener);
+                break;
+            case Site.SOHU:
+                new SohuApi().onGetVideoPlayUrl(video, listener);
                 break;
         }
     }
