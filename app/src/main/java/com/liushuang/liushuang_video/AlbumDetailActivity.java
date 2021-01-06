@@ -26,6 +26,7 @@ import com.liushuang.liushuang_video.detail.AlbumPlayGridFragment;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.ErrorInfo;
 import com.liushuang.liushuang_video.model.sohu.Video;
+import com.liushuang.liushuang_video.player.PlayActivity;
 import com.liushuang.liushuang_video.utils.ImageUtils;
 
 public class AlbumDetailActivity extends BaseActivity {
@@ -72,15 +73,15 @@ public class AlbumDetailActivity extends BaseActivity {
         mDirector = bindViewId(R.id.tv_album_director);
         mMainActor = bindViewId(R.id.tv_album_mainactor);
         mAlbumDesc = bindViewId(R.id.tv_album_desc);
-        /*mSuperBitstreamButton = bindViewId(R.id.bt_super);
+        mSuperBitstreamButton = bindViewId(R.id.bt_super);
         mSuperBitstreamButton.setOnClickListener(mOnSuperClickListener);
         mNormalBitstreamButton = bindViewId(R.id.bt_normal);
         mNormalBitstreamButton.setOnClickListener(mOnNormalClickListener);
         mHighBitstreamButton = bindViewId(R.id.bt_high);
-        mHighBitstreamButton.setOnClickListener(mOnHighClickListener);*/
+        mHighBitstreamButton.setOnClickListener(mOnHighClickListener);
     }
 
-    /*private View.OnClickListener mOnSuperClickListener = new View.OnClickListener() {
+    private View.OnClickListener mOnSuperClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             handleButtonClick(v);
@@ -111,7 +112,7 @@ public class AlbumDetailActivity extends BaseActivity {
         int currentPosition = (int) button.getTag(R.id.key_current_video_number);
         if (AppManager.isNetWorkAvailable()) {
             if (AppManager.isNetworkWifiAvailable()) {
-                mHistoryDBHelper.add(mAlbum);
+                /*mHistoryDBHelper.add(mAlbum);*/
                 Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
                 intent.putExtra("url",url);
                 intent.putExtra("type",type);
@@ -124,7 +125,6 @@ public class AlbumDetailActivity extends BaseActivity {
         }
 
     }
-*/
     private void updateInfo() {
         mAlbumName.setText(mAlbum.getTitle());
         //导演

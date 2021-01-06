@@ -131,8 +131,7 @@
         android:paddingBottom="@dimen/dimen_8dp"
         >
 
-        <!--<include layout="@layout/detail_bottom_button"/>
--->
+        <include layout="@layout/detail_bottom_button"/>
     </LinearLayout>
 
 

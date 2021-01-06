@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AlbumDetailActivity"></activity>
+        <activity android:name=".player.PlayActivity"></activity>
+        <activity android:name=".AlbumDetailActivity" />
         <activity android:name=".DetailListActivity" />
         <activity android:name=".GuideActivity" />
         <activity android:name=".HomeActivity" />

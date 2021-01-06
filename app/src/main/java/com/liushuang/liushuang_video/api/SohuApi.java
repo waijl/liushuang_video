@@ -1,5 +1,6 @@
 package com.liushuang.liushuang_video.api;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.liushuang.liushuang_video.AppManager;
@@ -16,7 +17,11 @@ import com.liushuang.liushuang_video.model.sohu.VideoList;
 import com.liushuang.liushuang_video.model.sohu.VideoResult;
 import com.liushuang.liushuang_video.utils.OkHttpUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -47,6 +52,7 @@ public class SohuApi extends BaseSiteApi{
     private final static String API_VIDEO_PLAY_URL_FORMAT = "http://api.tv.sohu.com/v4/video/info/%s.json?site=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=4.5.1&sysver=4.4.2&partner=47&aid=%s";
     //真实url格式 m3u8
     //http://hot.vrs.sohu.com/ipad3669271_4603585256668_6870592.m3u8?plat=6uid=f5dbc7b40dad477c8516885f6c681c01&pt=5&prod=app&pg=1
+    //http://hot.vrs.sohu.com/ipad6785135_4810255502621_9996456.m3u8?plat=6&ssl=2uid=0076fb16fb8b41f5bd9808a60f451fb4&pt=5&prod=app&pg=1
     @Override
     public void onGetChannelAlbums(Channel channel, int pageNum, int pageSize, OnGetChannelAlbumListener listener) {
         String url = getChannelAlbumUrl(channel, pageNum, pageSize);
@@ -242,7 +248,64 @@ public class SohuApi extends BaseSiteApi{
 
     @Override
     public void onGetVideoPlayUrl(Video video, OnGetVideoPlayUrlListener listener) {
+        final String url = String.format(API_VIDEO_PLAY_URL_FORMAT, video.getVid(), video.getAid());
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideoPlayUrls", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetFailed(info);
+                }
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideoPlayUrls", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetFailed(info);
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(response.body().string());
+                    JSONObject data = result.optJSONObject("data");
+                    String normalUrl = data.optString("url_nor");
+                    if (!TextUtils.isEmpty(normalUrl)) {
+                        normalUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        video.setNormalUrl(normalUrl);
+                        // 通知获取到标清码流url
+                        if (listener != null) {
+                            listener.onGetNoramlUrl(video,normalUrl);
+                        }
+                    }
+                    String superUrl = data.optString("url_super");
+                    if (!TextUtils.isEmpty(superUrl)) {
+                        superUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        video.setSuperUrl(superUrl);
+                        // 通知获取到超清码流url
+                        if (listener != null) {
+                            listener.onGetSuperUrl(video,superUrl);
+                        }
+                    }
+                    String highUrl = data.optString("url_high");
+                    if (!TextUtils.isEmpty(highUrl)) {
+                        highUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        video.setSuperUrl(highUrl);
+                        // 通知获取到高清码流url
+                        if (listener != null) {
+                            listener.onGetHighUrl(video,highUrl);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    private String getUUID(){
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().replace("-", "");
     }
 
 }

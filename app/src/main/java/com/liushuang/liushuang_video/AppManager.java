@@ -16,6 +16,7 @@ public class AppManager extends Application {
     private static OkHttpClient mOkHttpClient;
     private static Context mContext;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,5 +45,18 @@ public class AppManager extends Application {
         ConnectivityManager connectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
+    }
+
+    public static boolean isNetworkWifiAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(1) != null){
+            NetworkInfo.State state = connectivityManager.getNetworkInfo(1).getState();
+            if (state == NetworkInfo.State.CONNECTED || state == NetworkInfo.State.DISCONNECTING){
+                return true;
+            }else {
+                return false;
+            }
+        }
+        return false;
     }
 }
