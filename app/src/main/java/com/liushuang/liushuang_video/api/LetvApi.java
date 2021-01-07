@@ -1,11 +1,16 @@
 package com.liushuang.liushuang_video.api;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.AlbumList;
 import com.liushuang.liushuang_video.model.Channel;
 import com.liushuang.liushuang_video.model.ErrorInfo;
 import com.liushuang.liushuang_video.model.Site;
 import com.liushuang.liushuang_video.model.sohu.Video;
+import com.liushuang.liushuang_video.model.sohu.VideoList;
+import com.liushuang.liushuang_video.utils.MD5;
 import com.liushuang.liushuang_video.utils.OkHttpUtils;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -61,6 +66,44 @@ public class LetvApi extends BaseSiteApi{
     //http://play.g3proxy.lecloud.com/vod/v2/MjYwLzkvNTIvbGV0di11dHMvMTQvdmVyXzAwXzIyLTEwOTczMjQ5NzUtYXZjLTE5OTY1OS1hYWMtNDgwMDAtMjU4NjI0MC04Mzk3NjQ4OC04MmQxMGVlM2I3ZTdkMGU5ZjE4YzM1NDViMWI4MzI4Yi0xNDkyNDA2MDE2MTg4Lm1wNA==?b=259&mmsid=64244666&tm=1492847915&key=22f2f114ed643e0d08596659e5834cd6&platid=3&splatid=347&playid=0&tss=ios&vtype=21&cvid=711590995389&payff=0&pip=83611a86979ddb3df8ef0fb41034f39c&format=1&sign=mb&dname=mobile&expect=3&p1=0&p2=00&p3=003&tag=mobile&pid=10031263&format=1&expect=1&termid=2&pay=0&ostype=android&hwtype=iphone
 
     private Long mTimeOffSet = Long.MAX_VALUE;
+    public LetvApi(){
+        fetchServerTime();
+    }
+
+    private void fetchServerTime() {
+        if (mTimeOffSet != Long.MAX_VALUE){
+            return;
+        }
+        OkHttpUtils.excute(SEVER_TIME_URL, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(TAG, ">> onFailure !!");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, ">> onResponse failed!!");
+                    return;
+                }
+                String result = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String time = jsonObject.optString("time");
+                    updateServerTime(Long.parseLong(time));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    private void updateServerTime(Long time) {
+        if (mTimeOffSet == Long.MAX_VALUE){
+            mTimeOffSet = System.currentTimeMillis()/1000 - time;
+        }
+    }
 
 
     @Override
@@ -172,16 +215,263 @@ public class LetvApi extends BaseSiteApi{
     @Override
     public void onGetAlbumDetail(Album album, OnGetAlbumDetailListener listener) {
 
+        final String url = String.format(ALBUM_DESC_URL_FORMAT, album.getAlbumId());
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetAlbumDetail", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetAlbumDetailFailed(info);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetAlbumDetail", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetAlbumDetailFailed(info);
+                    return;
+                }
+
+                String result = response.body().string();
+                try {
+                    JSONObject albumJson = new JSONObject(result);
+                    if (albumJson.optJSONObject("body") != null){
+                        JSONObject albumJsonBody = albumJson.optJSONObject("body");
+                        if (albumJsonBody.optJSONObject("picCollections") != null){
+                            JSONObject jsonImg = albumJsonBody.optJSONObject("picCollections");
+                            if (!TextUtils.isEmpty(jsonImg.optString("150*200"))){
+                                album.setVerImgUrl(StringEscapeUtils.unescapeJava(jsonImg.optString("150*200")));
+                            }
+                        }
+
+                        if (!TextUtils.isEmpty(albumJsonBody.optString("description"))){
+                            album.setAlbumDesc(albumJsonBody.optString("description"));
+                        }
+                        if (!TextUtils.isEmpty(albumJsonBody.optString("nowEpisodes"))) {
+                            album.setVideoTotal(Integer.parseInt(albumJsonBody.optString("nowEpisodes")));
+                        }
+                        //directory starring
+                        if (!TextUtils.isEmpty(albumJsonBody.optString("directory"))) {
+                            album.setDirector(albumJsonBody.optString("directory"));
+                        }
+                        if (!TextUtils.isEmpty(albumJsonBody.optString("starring"))) {
+                            album.setMainActor(albumJsonBody.optString("starring"));
+                        }
+
+                        if (listener != null){
+                            listener.onGetAlbumDetailSuccess(album);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    @Override
-    public void onGetVideo(Album album, int pageSize, int pageNo, OnGetVideoListener listener) {
+    //取video相关信息
+    public void onGetVideo(final Album album, int pageSize, int pageNo, final OnGetVideoListener listener) {
+        final String url = String.format(ALBUM_VIDEOS_URL_FORMAT, album.getAlbumId(), pageNo, pageSize, "-1", "1");
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideo", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetVideoFailed(info);
+                }
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideo", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetVideoFailed(info);
+                    return;
+                }
+                String result = response.body().string();
+                try {
+                    JSONObject resultJson = new JSONObject(result);
+                    if (resultJson.optJSONObject("body") != null) {
+                        JSONObject bodyJson = resultJson.optJSONObject("body");
+                        JSONArray jsonArray = bodyJson.optJSONArray("videoInfo");
+                        if (jsonArray != null) {
+                            if (jsonArray.length() > 0) {
+                                VideoList videoList = new VideoList();
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    Video video = new Video();
+                                    //videoInfo表示每个视频info
+                                    JSONObject videoInfo = jsonArray.getJSONObject(i);
+                                    video.setAid(Long.parseLong(album.getAlbumId()));
+                                    video.setSite(album.getSite().getSiteId());
+                                    //nameCn: "择天记03"
+                                    if (!TextUtils.isEmpty(videoInfo.optString("nameCn"))) {
+                                        video.setVideoName(videoInfo.optString("nameCn"));
+                                    }
+                                    //mid: "64271196" 表示解释乐视视频源需要的
+                                    if (!TextUtils.isEmpty(videoInfo.optString("mid"))) {
+                                        video.setMid(Long.parseLong(videoInfo.optString("mid")));
+                                    }
+                                    if (!TextUtils.isEmpty(videoInfo.optString("id"))) {
+                                        video.setVid(Long.parseLong(videoInfo.optString("id")));
+                                    }
+                                    videoList.add(video);
+                                }
+                                if (videoList.size() > 0 && listener != null) {
+                                    listener.onGetVideoSuccess(videoList);
+                                } else {
+                                    ErrorInfo info  = buildErrorInfo(url, "onGetVideo", null, ErrorInfo.ERROR_TYPE_DATA_CONVERT);
+                                    listener.onGetVideoFailed(info);
+                                }
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    @Override
-    public void onGetVideoPlayUrl(Video video, OnGetVideoPlayUrlListener listener) {
+    //取视频播放url
+    public void onGetVideoPlayUrl(final Video video, final OnGetVideoPlayUrlListener listener) {
+        //args : mid, servertime, key, vid
+        final String url = String.format(VIDEO_FILE_URL_FORMAT, video.getMid(), getCurrentServerTime(), getKey(video, getCurrentServerTime()), video.getVid());
+        OkHttpUtils.excute(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (listener != null) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideoPlayUrl", e, ErrorInfo.ERROR_TYPE_URL);
+                    listener.onGetFailed(info);
+                }
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    ErrorInfo info  = buildErrorInfo(url, "onGetVideoPlayUrl", null, ErrorInfo.ERROR_TYPE_HTTP);
+                    listener.onGetFailed(info);
+                    return;
+                }
+                String result = response.body().string();
+                try {
+                    JSONObject resultJson = new JSONObject(result);
+                    JSONObject infosJson = resultJson.getJSONObject("body").getJSONObject("videofile").getJSONObject("infos");
+                    if (infosJson != null) {
+                        JSONObject normalInfoObject = infosJson.getJSONObject("mp4_350");
+                        if (normalInfoObject != null) {
+                            String normalUrl = "";
+                            if (!TextUtils.isEmpty(normalInfoObject.optString("mainUrl"))) {
+                                normalUrl = normalInfoObject.optString("mainUrl");
+                                normalUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(normalInfoObject.optString("backUrl1"))) {
+                                normalUrl = normalInfoObject.optString("backUrl1");
+                                normalUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(normalInfoObject.optString("backUrl2"))) {
+                                normalUrl = normalInfoObject.optString("backUrl2");
+                                normalUrl += VIDEO_REAL_LINK_APPENDIX;
+                            }
+                            getRealUrl(video, normalUrl, BITSTREAM_NORMAL, listener);
+                        }
+                        JSONObject highInfoObject = infosJson.getJSONObject("mp4_1000");
+                        if (highInfoObject != null) {
+                            String highUrl = "";
+                            if (!TextUtils.isEmpty(highInfoObject.optString("mainUrl"))) {
+                                highUrl = highInfoObject.optString("mainUrl");
+                                highUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(highInfoObject.optString("backUrl1"))) {
+                                highUrl = highInfoObject.optString("backUrl1");
+                                highUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(highInfoObject.optString("backUrl2"))) {
+                                highUrl = highInfoObject.optString("backUrl2");
+                                highUrl += VIDEO_REAL_LINK_APPENDIX;
+                            }
+                            getRealUrl(video, highUrl, BITSTREAM_HIGH, listener);
+                        }
+                        JSONObject superfoObject = infosJson.getJSONObject("mp4_1300");
+                        if (superfoObject != null) {
+                            String superUrl = "";
+                            if (!TextUtils.isEmpty(superfoObject.optString("mainUrl"))) {
+                                superUrl = superfoObject.optString("mainUrl");
+                                superUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(superfoObject.optString("backUrl1"))) {
+                                superUrl = superfoObject.optString("backUrl1");
+                                superUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(highInfoObject.optString("backUrl2"))) {
+                                superUrl = superfoObject.optString("backUrl2");
+                                superUrl += VIDEO_REAL_LINK_APPENDIX;
+                            }
+                            getRealUrl(video, superUrl, BITSTREAM_SUPER, listener);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    //http://play.g3proxy.lecloud.com/vod/v2/MjYwLzkvNTIvbGV0di11dHMvMTQvdmVyXzAwXzIyLTEwOTczMjQ5NzUtYXZjLTE5OTY1OS1hYWMtNDgwMDAtMjU4NjI0MC04Mzk3NjQ4OC04MmQxMGVlM2I3ZTdkMGU5ZjE4YzM1NDViMWI4MzI4Yi0xNDkyNDA2MDE2MTg4Lm1wNA==?b=259&mmsid=64244666&tm=1492847915&key=22f2f114ed643e0d08596659e5834cd6&platid=3&splatid=347&playid=0&tss=ios&vtype=21&cvid=711590995389&payff=0&pip=83611a86979ddb3df8ef0fb41034f39c&format=1&sign=mb&dname=mobile&expect=3&p1=0&p2=00&p3=003&tag=mobile&pid=10031263&format=1&expect=1&termid=2&pay=0&ostype=android&hwtype=iphone
+    //解析以上url返回的location字段,即为真实url
+    private void getRealUrl(final Video video, String normalUrl, final int type, final OnGetVideoPlayUrlListener listener) {
+        OkHttpUtils.excute(normalUrl, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // Nothing
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    return;
+                }
+                String result = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    //http://jdplay.lecloud.com/play.videocache.lecloud.com/137/31/87/letv-uts/14/ver_00_22-1136449302-avc-199344-aac-48000-2734080-88713127-639d866ec99b5db4ffcf9155fbdd3924-1609778301939.m3u8?crypt=94aa7f2e97&b=259&nlh=4096&nlt=60&bf=30&p2p=1&video_type=mp4&termid=2&tss=ios&platid=3&splatid=347&its=0&qos=3&fcheck=0&amltag=6&mltag=6&uid=3736582241.rp&keyitem=GOw_33YJAAbXYE-cnQwpfLlv_b2zAkYctFVqe5bsXQpaGNn3T1-vhw..&ntm=1610045400&nkey=a3156405bf9a5aad7819ca82729c0238&nkey2=30baefa1025145a703b636273ea09416&auth_key=1610045400-1-3736582241.rp-3-347-d4df720aed53cfb65109555c34eb74d1&geo=CN-22-20-1&payff=0&m3v=3&sign=mb&cvid=793157047016&playid=0&dname=mobile&hwtype=iphone&tag=mobile&ostype=android&pay=0&vtype=21&tm=1610027009&mmsid=71276987&pid=10057356&p3=003&p2=00&p1=0&key=b029f800c71d65eb0c669b58e35942d8&uidx=0&errc=0&gn=50038&ndtype=2&vrtmcd=106&buss=6&cips=222.183.184.97
+                    String realUrl = jsonObject.optString("location");
+                    if (type == BITSTREAM_NORMAL) {
+                        video.setNormalUrl(realUrl);
+                        if (listener != null) {
+                            listener.onGetNoramlUrl(video, realUrl);
+                        }
+                    }
+                    if (type == BITSTREAM_HIGH) {
+                        video.setHighUrl(realUrl);
+                        if (listener != null) {
+                            listener.onGetHighUrl(video, realUrl);
+                        }
+                    }
+                    if (type == BITSTREAM_SUPER) {
+                        video.setHighUrl(realUrl);
+                        if (listener != null) {
+                            listener.onGetSuperUrl(video, realUrl);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private String getKey(Video video, String serverTime) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(video.getMid());
+        sb.append(",");
+        sb.append(serverTime);
+        sb.append(",");
+        sb.append("bh65OzqYYYmHRQ");
+        return MD5.toMd5(sb.toString());
+    }
+
+    private String getCurrentServerTime() {
+        if (mTimeOffSet != Long.MAX_VALUE) {
+            return String.valueOf(System.currentTimeMillis()/1000 - mTimeOffSet);
+        } else {
+            return null;
+        }
     }
 
 }
