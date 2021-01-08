@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video.player;
+ package com.liushuang.liushuang_video.player;
 
 import androidx.appcompat.app.AppCompatActivity;
 

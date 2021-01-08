@@ -1,11 +1,14 @@
 package com.liushuang.liushuang_video;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -46,6 +49,7 @@ public class AlbumDetailActivity extends BaseActivity {
     private Button mNormalBitstreamButton;
     private Button mHighBitstreamButton;
     private int mCurrentVideoPosition;
+    private boolean mIsFirstUseMobileNetwork = true;
     /*private CommonDBHelper mFavoriteDBHelper;
     private CommonDBHelper mHistoryDBHelper;*/
 
@@ -119,8 +123,47 @@ public class AlbumDetailActivity extends BaseActivity {
                 intent.putExtra("currentPosition",currentPosition);
                 intent.putExtra("video",video);
                 startActivity(intent);
-            } else {
-                // TODO 拓展
+            }else{
+                Log.d(TAG, "使用流量");
+                if (mIsFirstUseMobileNetwork){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog alertDialog = new AlertDialog.Builder(AlbumDetailActivity.this).create();
+                            alertDialog.setIcon(R.drawable.warning);
+                            alertDialog.setTitle("使用流量提醒：");
+                            alertDialog.setMessage("您即将使用流量观看视频");
+                            alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "否", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+
+                            alertDialog.setButton(Dialog.BUTTON_POSITIVE, "是", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mIsFirstUseMobileNetwork = false;
+                                    Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
+                                    intent.putExtra("url",url);
+                                    intent.putExtra("type",type);
+                                    intent.putExtra("currentPosition",currentPosition);
+                                    intent.putExtra("video",video);
+                                    startActivity(intent);
+                                }
+                            });
+                            alertDialog.show();
+                        }
+                    });
+
+                }else {
+                    Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
+                    intent.putExtra("url",url);
+                    intent.putExtra("type",type);
+                    intent.putExtra("currentPosition",currentPosition);
+                    intent.putExtra("video",video);
+                    startActivity(intent);
+                }
             }
         }
 

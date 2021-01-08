@@ -59,4 +59,18 @@ public class AppManager extends Application {
         }
         return false;
     }
+
+    //查看是否连接了数据网络
+    public static boolean checkNetworkConnection()
+    {
+        final ConnectivityManager connMgr = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+//        final android.net.NetworkInfo wifi =connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        final android.net.NetworkInfo mobile =connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if(mobile.isAvailable())  //getState()方法是查询是否连接了数据网络
+            return true;
+        else
+            return false;
+    }
 }
