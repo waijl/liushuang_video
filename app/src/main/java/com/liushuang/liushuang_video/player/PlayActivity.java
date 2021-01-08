@@ -29,8 +29,5 @@ public class PlayActivity extends AppCompatActivity {
         Log.d(TAG, ">> url " + mUrl + ", mStreamType " + mStreamType + ", mCurrentPosition " + mCurrentPosition);
         Log.d(TAG, ">> video " + mVideo);
 
-
-
-
     }
 }
