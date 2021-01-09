@@ -14,6 +14,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        flavorDimensions "VersionCode"
     }
 
     buildTypes {
@@ -26,6 +27,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    productFlavors {
+        all32 { minSdkVersion 21 }
+        all64 { minSdkVersion 21 }
+    }
+
+    /*sourceSets.main {
+        res.srcDirs = ['src/main/res']
+        jniLibs.srcDirs = ['src/main/jniLibs']
+    }*/
+
+    sourceSets { main { jniLibs.srcDirs = ['libs'] } }
+
 }
 
 dependencies {
@@ -40,7 +54,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
