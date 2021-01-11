@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -557,6 +559,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
      private int mMaxVolume = 10;
      private AudioManager mAudioManager;
      private String mLiveTitle;//直播节目标题
+     private Thread mThread;
 
      @Override
      protected int getLayoutId() {
@@ -743,6 +746,17 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
      @Override
      protected void initView() {
+         //Android编程实现播放视频时切换全屏并隐藏状态栏的方法
+         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+             /*getWindow().getDecorView().setSystemUiVisibility(View.INVISIBLE);*/
+             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
+         }else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+// this.requestWindowFeature(Window.f);// 去掉标题栏
+// this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+// WindowManager.LayoutParams.FLAG_FULLSCREEN);// 去掉信息栏
+             Log.i("info", "portrait"); // 竖屏
+         }
          mUrl = getIntent().getStringExtra("url");
          mLiveTitle = getIntent().getStringExtra("title");
          mStreamType = getIntent().getIntExtra("type", 0);
@@ -757,6 +771,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
          initTopAndBottomView();
          initCenterView();
          initListener();
+
          //init player
          mVideoView = bindViewId(R.id.video_view);
          IjkMediaPlayer.loadLibrariesOnce(null);
@@ -768,7 +783,9 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
          mVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
              @Override
              public void onPrepared(IMediaPlayer mp) {
+
                  mVideoView.start();
+                 setCurrentBattery();
                  int duration = mVideoView.getDuration();
                  mVideoTotalTime.setText(stringForTime(duration));
              }
@@ -862,7 +879,8 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
              hideTopAndBottomLayout();
          } else {
              showTopAndBottomLayout();
-             //先显示,没有任何操作,就5s后隐藏
+
+             //先显示,没有任何操作,就10s后隐藏
              mEventHandler.postDelayed(new Runnable() {
                  @Override
                  public void run() {
@@ -878,6 +896,42 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
          mTopLayout.setVisibility(View.VISIBLE);
          mBottomLayout.setVisibility(View.VISIBLE);
          updateProgress();
+         mThread = new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 boolean quit = false;
+                 int count = 0;
+                 // 每间隔一秒count加1 ，直到quit为true。
+                 while (!quit) {
+                     try {
+
+                         runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+                                 long duration = mVideoView.getDuration();
+                                 Log.d(TAG, ">>duration = " + duration);
+                                 long nowduration = mVideoView.getCurrentPosition();
+                                 /*long nowduration = (mSeekBar.getProgress() * duration)/1000L;*/
+                                 /*Log.d(TAG, ">>SeekBar progress = " + mSeekBar.getProgress());*/
+                                 Log.d(TAG, ">>nowduration = " + stringForTime((int)nowduration));
+                                 mVideoCurrentTime.setText(stringForTime((int)nowduration));
+                             }
+                         });
+                         Thread.sleep(1000);
+                         count++;
+                         Log.d(TAG, ">> count = " + count);
+
+                     } catch (InterruptedException e) {
+                         e.printStackTrace();
+                     }
+
+                     if (count == 10){
+                         quit = true;
+                     }
+                 }
+             }
+         });
+         mThread.start();
          if (mEventHandler != null) {
              mEventHandler.removeMessages(CHECK_TIME);
              Message msg = mEventHandler.obtainMessage(CHECK_TIME);
@@ -904,6 +958,33 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
              default:
                  break;
          }
+
+
+
+         /*boolean quit = false;
+         int count = 0;
+         // 每间隔一秒count加1 ，直到quit为true。
+         while (!quit) {
+             try {
+                 Thread.sleep(1000);
+                 runOnUiThread(new Runnable() {
+                     @Override
+                     public void run() {
+                         long duration = mVideoView.getDuration();
+                         long nowduration = (mSeekBar.getProgress() * duration)/1000L;
+                         mVideoCurrentTime.setText(stringForTime((int)nowduration));
+                     }
+                 });
+                 count++;
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+
+             if (count == 10){
+                 quit = true;
+             }
+         }*/
+
      }
 
      private void hideTopAndBottomLayout() {

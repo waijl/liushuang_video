@@ -125,8 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/dimen_10dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/ic_battery_10"/>
+                    android:layout_gravity="center_vertical"/>
 
                 <TextView
                     android:id="@+id/tv_sys_time"
@@ -174,7 +173,7 @@
             android:id="@+id/iv_next_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginLeft="@dimen/dimen_8dp"
             android:src="@drawable/panel_next_selector"/>
 
         <TextView
