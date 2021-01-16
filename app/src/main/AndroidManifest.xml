@@ -19,14 +19,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
         android:usesCleartextTraffic="true">
-        <activity android:name=".player.PlayActivity"
-            tools:ignore="Instantiatable" android:screenOrientation="landscape"></activity>
-        <activity android:name=".AlbumDetailActivity"
+        <activity android:name=".live.LiveActivity"></activity>
+        <activity
+            android:name=".player.PlayActivity"
+            android:screenOrientation="landscape"
             tools:ignore="Instantiatable" />
-        <activity android:name=".DetailListActivity"
+        <activity
+            android:name=".AlbumDetailActivity"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".DetailListActivity"
             tools:ignore="Instantiatable" />
         <activity android:name=".GuideActivity" />
-        <activity android:name=".HomeActivity"
+        <activity
+            android:name=".HomeActivity"
             tools:ignore="Instantiatable" />
         <activity android:name=".MainActivity">
             <intent-filter>

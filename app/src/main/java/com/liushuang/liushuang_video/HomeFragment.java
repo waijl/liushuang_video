@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.hejunlin.superindicatorlibray.CircleIndicator;
 import com.hejunlin.superindicatorlibray.LoopViewPager;
 import com.liushuang.liushuang_video.base.BaseFragment;
+import com.liushuang.liushuang_video.live.LiveActivity;
 import com.liushuang.liushuang_video.model.Channel;
 
 public class HomeFragment extends BaseFragment {
@@ -50,7 +51,7 @@ public class HomeFragment extends BaseFragment {
                 switch (position){
                     case 6:
                         //跳转直播
-//                        LiveActivity.launch(getActivity());
+                        LiveActivity.launch(getActivity());
                         break;
                     case 7:
                         //跳转收藏

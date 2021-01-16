@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +33,7 @@ import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.base.BaseActivity;
 import com.liushuang.liushuang_video.model.sohu.Video;
 import com.liushuang.liushuang_video.utils.DateUtils;
+import com.liushuang.liushuang_video.utils.SysUtils;
 import com.liushuang.liushuang_video.widget.media.IjkVideoView;
 
 import java.text.NumberFormat;
@@ -655,18 +658,19 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
      @Override
      public void onScrollVerticalLeft(float y1, float y2) {
-         /*int height = getResources().getDisplayMetrics().heightPixels;
+         int height = getResources().getDisplayMetrics().heightPixels;
          int offset = (int) (mMaxLight * y1)/ height;
          if (Math.abs(offset) > 0) {
              mCurrentLight += offset;//得到变化后的亮度
              mCurrentLight = Math.max(0, Math.min(mMaxLight, mCurrentLight));
              // 更新系统亮度
-             SysUtils.setBrightness(this, mCurrentLight);
+//             SysUtils.setBrightness(this, mCurrentLight);
+             SysUtils.setLight(this, mCurrentLight);
              SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
              editor.putInt("shared_preferences_light", mCurrentLight);
              editor.commit();
              updateVerticalText(mCurrentLight, mMaxLight);
-         }*/
+         }
      }
 
      @Override
@@ -823,10 +827,13 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
      }
 
      private void initLight() {
-         /*mCurrentLight = SysUtils.getDefaultBrightness(this);
+         mCurrentLight = SysUtils.getDefaultBrightness(this);
+         /*Log.d(TAG, "<<initLight mCurrentLight 1 " + mCurrentLight);*/
          if (mCurrentLight == -1) {//获取不到亮度sharedpreferences文件
-             mCurrentLight = SysUtils.getBrightness(this);
-         }*/
+//             mCurrentLight = SysUtils.getBrightness(this);
+             mCurrentLight = SysUtils.getLight(this);
+             Log.d(TAG, "<<initLight mCurrentLight 2 " + mCurrentLight);
+         }
      }
 
      private void initGesture() {
