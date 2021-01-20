@@ -654,6 +654,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
          long progress = Math.max(0, Math.min(mVideoView.getDuration(), offset));
          mScrollProgress = progress;
          updateHorizontalText(progress);
+         updateProgress();
      }
 
      @Override

@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
         android:usesCleartextTraffic="true">
-        <activity android:name=".live.LiveActivity"></activity>
+        <activity android:name=".favorite.FavoriteActivity"></activity>
+        <activity android:name=".live.LiveActivity" />
         <activity
             android:name=".player.PlayActivity"
             android:screenOrientation="landscape"
