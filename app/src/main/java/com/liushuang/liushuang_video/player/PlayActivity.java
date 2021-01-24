@@ -1126,6 +1126,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
          intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
          intent.putExtra("url", url);
          intent.putExtra("title", title);
+
          activity.startActivity(intent);
      }
 
