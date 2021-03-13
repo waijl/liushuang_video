@@ -110,31 +110,31 @@ public class HomeFragment extends BaseFragment {
             int imgResId = -1;
             switch (id) {
                 case Channel.SHOW:
-                    imgResId = R.drawable.ic_show;
+                    imgResId = R.mipmap.ic_show;
                     break;
                 case Channel.MOVIE:
-                    imgResId = R.drawable.ic_movie;
+                    imgResId = R.mipmap.ic_movie;
                     break;
                 case Channel.COMIC:
-                    imgResId = R.drawable.ic_comic;
+                    imgResId = R.mipmap.comic;
                     break;
                 case Channel.DOCUMENTRY:
-                    imgResId = R.drawable.ic_movie;
+                    imgResId = R.mipmap.document;
                     break;
                 case Channel.MUSIC:
-                    imgResId = R.drawable.ic_music;
+                    imgResId = R.mipmap.ic_music;
                     break;
                 case Channel.VARIETY:
-                    imgResId = R.drawable.ic_variety;
+                    imgResId = R.mipmap.ic_variety;
                     break;
                 case Channel.LIVE:
-                    imgResId = R.drawable.ic_live;
+                    imgResId = R.mipmap.iptv;
                     break;
                 case Channel.FAVORITE:
-                    imgResId = R.drawable.ic_bookmark;
+                    imgResId = R.mipmap.favorite;
                     break;
                 case Channel.HISTORY:
-                    imgResId = R.drawable.ic_history;
+                    imgResId = R.mipmap.ic_history;
                     break;
             }
             holder.imageView.setImageDrawable(getActivity().getResources().getDrawable(imgResId));

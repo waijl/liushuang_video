@@ -17,7 +17,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/header"
+        android:src="@drawable/waiwai"
         app:border_color="#fff"
         app:border_width="2dp" />
 

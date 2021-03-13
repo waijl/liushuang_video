@@ -8,7 +8,7 @@
         <item
             android:id="@+id/navigation_item_video"
             android:icon="@drawable/iconfont_home"
-            android:title="视频" />
+            android:title="返回首页" />
         <item
             android:id="@+id/navigation_item_blog"
             android:icon="@drawable/iconfont_git"
@@ -16,7 +16,7 @@
         <item
             android:id="@+id/navigation_item_about"
             android:icon="@drawable/iconfont_about"
-            android:title="关于SuperVideo" />
+            android:title="关于北瓜视频" />
     </group>
 
 </menu>

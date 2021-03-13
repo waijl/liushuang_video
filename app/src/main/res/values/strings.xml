@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">liushuang_video</string>
+    <string name="app_name">北瓜视频</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
     <string name="home_title">首页</string>
     <string name="blog_title">我的GitHub</string>
-    <string name="about_title">关于SuperVideo</string>
+    <string name="about_title">关于北瓜视频</string>
 
     <string name="app_description">1、聚合海量视频，视频源来源于搜狐，乐视等主流视频网站的丰富视频内容，最新院线大片，热播剧随时看\n
 2、基于ijkplayer,解码支持RMVB,MKV,WMA，MP4...等主流音视频格式，达到万能播放的体验\n
