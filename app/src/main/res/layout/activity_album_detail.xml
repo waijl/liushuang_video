@@ -4,7 +4,7 @@
     android:id="@+id/activity_album_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlbumDetailActivity"
+    tools:context=".detail.AlbumDetailActivity"
     android:orientation="vertical">
 
     <include layout="@layout/top_actionbar"/>

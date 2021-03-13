@@ -27,16 +27,16 @@
             android:screenOrientation="landscape"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".AlbumDetailActivity"
+            android:name=".detail.AlbumDetailActivity"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".DetailListActivity"
+            android:name=".detail.DetailListActivity"
             tools:ignore="Instantiatable" />
         <activity android:name=".GuideActivity" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".home.HomeActivity"
             tools:ignore="Instantiatable" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.detail;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,11 +14,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.api.OnGetChannelAlbumListener;
 import com.liushuang.liushuang_video.api.SiteApi;
 import com.liushuang.liushuang_video.base.BaseFragment;
@@ -30,8 +29,6 @@ import com.liushuang.liushuang_video.model.ErrorInfo;
 import com.liushuang.liushuang_video.model.Site;
 import com.liushuang.liushuang_video.utils.ImageUtils;
 import com.liushuang.liushuang_video.widget.PullLoadRecyclerView;
-
-import org.w3c.dom.Text;
 
 public class DetailListFragment extends BaseFragment {
 

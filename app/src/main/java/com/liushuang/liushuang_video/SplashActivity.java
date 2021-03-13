@@ -1,7 +1,6 @@
 package com.liushuang.liushuang_video;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,12 +8,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+
+import com.liushuang.liushuang_video.home.HomeActivity;
 
 /**
  * app启动时的主入口activity
  */
-public class MainActivity extends Activity {
+public class SplashActivity extends Activity {
 
     private SharedPreferences mSharedPreferences;
     private static final int GO_HOME = 1;
@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splash);
         mSharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
         init();
     }
@@ -58,13 +58,13 @@ public class MainActivity extends Activity {
     }
 
     private void startGuideActivity() {
-        Intent intent = new Intent(MainActivity.this, GuideActivity.class);
+        Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void startHomeActivity() {
-        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();
     }

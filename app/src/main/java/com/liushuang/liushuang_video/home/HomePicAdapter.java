@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.home;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
+import com.liushuang.liushuang_video.R;
 
 import org.w3c.dom.Text;
 

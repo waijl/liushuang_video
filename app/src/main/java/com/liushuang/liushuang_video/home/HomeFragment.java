@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.home;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.hejunlin.superindicatorlibray.CircleIndicator;
 import com.hejunlin.superindicatorlibray.LoopViewPager;
+import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.base.BaseFragment;
+import com.liushuang.liushuang_video.detail.DetailListActivity;
 import com.liushuang.liushuang_video.favorite.FavoriteActivity;
 import com.liushuang.liushuang_video.history.HistoryActivity;
 import com.liushuang.liushuang_video.live.LiveActivity;

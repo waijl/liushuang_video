@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.liushuang.liushuang_video.AlbumDetailActivity;
+import com.liushuang.liushuang_video.detail.AlbumDetailActivity;
 import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.AlbumList;

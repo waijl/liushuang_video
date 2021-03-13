@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.detail;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,11 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liushuang.liushuang_video.AppManager;
+import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.api.OnGetAlbumDetailListener;
 import com.liushuang.liushuang_video.api.OnGetVideoPlayUrlListener;
 import com.liushuang.liushuang_video.api.SiteApi;
 import com.liushuang.liushuang_video.base.BaseActivity;
-import com.liushuang.liushuang_video.detail.AlbumPlayGridFragment;
 import com.liushuang.liushuang_video.common.CommonDBHelper;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.ErrorInfo;

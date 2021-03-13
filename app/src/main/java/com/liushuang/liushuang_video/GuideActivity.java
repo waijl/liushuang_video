@@ -1,7 +1,6 @@
 package com.liushuang.liushuang_video;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -15,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.liushuang.liushuang_video.home.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.List;

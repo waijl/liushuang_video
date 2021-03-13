@@ -26,9 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
-import com.liushuang.liushuang_video.AlbumDetailActivity;
+import com.liushuang.liushuang_video.detail.AlbumDetailActivity;
 import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.base.BaseActivity;
 import com.liushuang.liushuang_video.model.sohu.Video;

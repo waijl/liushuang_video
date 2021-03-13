@@ -1,9 +1,10 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.home;
 
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
+import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.base.BaseFragment;
 
 public class AboutFragment extends BaseFragment {

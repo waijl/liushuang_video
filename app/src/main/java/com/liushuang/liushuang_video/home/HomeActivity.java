@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -11,6 +11,8 @@ import android.view.Gravity;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.liushuang.liushuang_video.FragmentManagerWrapper;
+import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.base.BaseActivity;
 
 /**

@@ -1,4 +1,4 @@
-package com.liushuang.liushuang_video;
+package com.liushuang.liushuang_video.detail;
 
 
 import androidx.annotation.NonNull;
@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.base.BaseActivity;
 import com.liushuang.liushuang_video.indicator.CoolIndicatorLayout;
 import com.liushuang.liushuang_video.indicator.IPagerIndicatorView;
