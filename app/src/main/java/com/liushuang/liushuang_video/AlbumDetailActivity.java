@@ -1,16 +1,12 @@
 package com.liushuang.liushuang_video;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +22,7 @@ import com.liushuang.liushuang_video.api.OnGetVideoPlayUrlListener;
 import com.liushuang.liushuang_video.api.SiteApi;
 import com.liushuang.liushuang_video.base.BaseActivity;
 import com.liushuang.liushuang_video.detail.AlbumPlayGridFragment;
+import com.liushuang.liushuang_video.common.CommonDBHelper;
 import com.liushuang.liushuang_video.model.Album;
 import com.liushuang.liushuang_video.model.ErrorInfo;
 import com.liushuang.liushuang_video.model.sohu.Video;
@@ -50,8 +47,8 @@ public class AlbumDetailActivity extends BaseActivity {
     private Button mHighBitstreamButton;
     private int mCurrentVideoPosition;
     private boolean mIsFirstUseMobileNetwork = true;
-    /*private CommonDBHelper mFavoriteDBHelper;
-    private CommonDBHelper mHistoryDBHelper;*/
+    private CommonDBHelper mFavoriteDBHelper;
+    private CommonDBHelper mHistoryDBHelper;
 
     @Override
     protected int getLayoutId() {
@@ -67,11 +64,12 @@ public class AlbumDetailActivity extends BaseActivity {
         setSupportArrowActionBar(true);
         setTitle(mAlbum.getTitle());//显示标题
 
-       /* mFavoriteDBHelper = new CommonDBHelper(this);
+        mFavoriteDBHelper = new CommonDBHelper(this);
         mFavoriteDBHelper.setParams("favorite");
         mHistoryDBHelper = new CommonDBHelper(this);
         mHistoryDBHelper.setParams("history");
-        mIsFavor = mFavoriteDBHelper.getAlbumById(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId()) != null ;*/
+        mIsFavor = mFavoriteDBHelper.getAlbumById(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId()) != null ;
+
         mAlbumImg = bindViewId(R.id.iv_album_image);
         mAlbumName = bindViewId(R.id.tv_album_name);
         mDirector = bindViewId(R.id.tv_album_director);
@@ -116,7 +114,7 @@ public class AlbumDetailActivity extends BaseActivity {
         int currentPosition = (int) button.getTag(R.id.key_current_video_number);
         if (AppManager.isNetWorkAvailable()) {
             if (AppManager.isNetworkWifiAvailable()) {
-                /*mHistoryDBHelper.add(mAlbum);*/
+                mHistoryDBHelper.add(mAlbum);
                 Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
                 intent.putExtra("url",url);
                 intent.putExtra("type",type);
@@ -144,6 +142,7 @@ public class AlbumDetailActivity extends BaseActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     mIsFirstUseMobileNetwork = false;
+                                    mHistoryDBHelper.add(mAlbum);
                                     Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
                                     intent.putExtra("url",url);
                                     intent.putExtra("type",type);
@@ -157,6 +156,7 @@ public class AlbumDetailActivity extends BaseActivity {
                     });
 
                 }else {
+                    mHistoryDBHelper.add(mAlbum);
                     Intent intent = new Intent(AlbumDetailActivity.this, PlayActivity.class);
                     intent.putExtra("url",url);
                     intent.putExtra("type",type);
@@ -241,7 +241,7 @@ public class AlbumDetailActivity extends BaseActivity {
                 if (mIsFavor) {
                     mIsFavor = false;
                     // 收藏状态更新
-//                    mFavoriteDBHelper.delete(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId());
+                    mFavoriteDBHelper.delete(mAlbum.getAlbumId(), mAlbum.getSite().getSiteId());
                     invalidateOptionsMenu();
                     Toast.makeText(this, "已取消收藏", Toast.LENGTH_SHORT).show();
                 }
@@ -250,7 +250,7 @@ public class AlbumDetailActivity extends BaseActivity {
                 if (!mIsFavor) {
                     mIsFavor = true;
                     // 收藏状态更新
-//                    mFavoriteDBHelper.add(mAlbum);
+                    mFavoriteDBHelper.add(mAlbum);
                     invalidateOptionsMenu();
                     Toast.makeText(this, "已添加收藏", Toast.LENGTH_SHORT).show();
                 }

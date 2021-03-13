@@ -1,22 +1,25 @@
-package com.liushuang.liushuang_video.favorite;
+package com.liushuang.liushuang_video.history;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.common.CommonActivity;
 
-public class FavoriteActivity extends CommonActivity {
+public class HistoryActivity extends CommonActivity {
 
     @Override
     public String getTitleText() {
-        return getResources().getString(R.string.favorite_title);
+        return getResources().getString(R.string.history_title);
     }
 
     @Override
     public String getEmptyText() {
-        return getResources().getString(R.string.favorite_empty);
+        return getResources().getString(R.string.history_empty);
     }
 
     @Override
@@ -26,13 +29,13 @@ public class FavoriteActivity extends CommonActivity {
 
     @Override
     public String getTableName() {
-        return "favorite";
+        return "history";
     }
 
     public static void launch(Activity activity) {
-        
-        Intent intent = new Intent(activity, FavoriteActivity.class);
+        Intent intent = new Intent(activity, HistoryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         activity.startActivity(intent);
     }
+
 }

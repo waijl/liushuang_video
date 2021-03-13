@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.hejunlin.superindicatorlibray.CircleIndicator;
 import com.hejunlin.superindicatorlibray.LoopViewPager;
 import com.liushuang.liushuang_video.base.BaseFragment;
+import com.liushuang.liushuang_video.favorite.FavoriteActivity;
+import com.liushuang.liushuang_video.history.HistoryActivity;
 import com.liushuang.liushuang_video.live.LiveActivity;
 import com.liushuang.liushuang_video.model.Channel;
 
@@ -55,11 +57,11 @@ public class HomeFragment extends BaseFragment {
                         break;
                     case 7:
                         //跳转收藏
-//                        FavoriteActivity.launch(getActivity());
+                        FavoriteActivity.launch(getActivity());
                         break;
                     case 8:
                         //跳转历史记录
-//                        HistoryActivity.launch(getActivity());
+                        HistoryActivity.launch(getActivity());
                         break;
                     default:
                         //跳转对应频道
