@@ -10,12 +10,13 @@ import com.liushuang.liushuang_video.model.sohu.Video;
 
 public interface OnGetVideoPlayUrlListener {
 
-    void onGetSuperUrl(Video video, String url);//超清url
+    void onGetSuperUrl(Video video, String url);//蓝光url
 
-    void onGetNoramlUrl(Video video, String url);//标清url
+    void onGetNoramlUrl(Video video, String url);//高清url
 
-    void onGetHighUrl(Video video, String url);//高清url
+    void onGetHighUrl(Video video, String url);//超清url
 
     void onGetFailed(ErrorInfo info);
 
+    void onGetFluentUrl(Video video, String realUrl);//流畅url
 }

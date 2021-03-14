@@ -73,9 +73,21 @@ public class Video implements Parcelable {
         this.highUrl = highUrl;
     }
 
+    public String getFluentUrl() {
+        return fluentUrl;
+    }
+
+    public void setFluentUrl(String fluentUrl) {
+        this.fluentUrl = fluentUrl;
+    }
+    //蓝光
     private String superUrl;
+    //高清
     private String normalUrl;
+    //超清
     private String highUrl;
+    //流畅
+    private String fluentUrl;
     private long mid;
 
     public long getMid() {
@@ -172,6 +184,7 @@ public class Video implements Parcelable {
         this.superUrl = in.readString();
         this.normalUrl = in.readString();
         this.highUrl = in.readString();
+        this.fluentUrl = in.readString();
         this.site = in.readInt();
     }
     //　parcel对象读写序列要对应
@@ -187,6 +200,8 @@ public class Video implements Parcelable {
         parcel.writeString(superUrl);
         parcel.writeString(normalUrl);
         parcel.writeString(highUrl);
+        parcel.writeString(fluentUrl);
         parcel.writeInt(site);
     }
+
 }

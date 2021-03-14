@@ -46,6 +46,7 @@ public class AlbumDetailActivity extends BaseActivity {
     private Button mSuperBitstreamButton;
     private Button mNormalBitstreamButton;
     private Button mHighBitstreamButton;
+    private Button mFluentBitstreamButton;
     private int mCurrentVideoPosition;
     private boolean mIsFirstUseMobileNetwork = true;
     private CommonDBHelper mFavoriteDBHelper;
@@ -82,6 +83,8 @@ public class AlbumDetailActivity extends BaseActivity {
         mNormalBitstreamButton.setOnClickListener(mOnNormalClickListener);
         mHighBitstreamButton = bindViewId(R.id.bt_high);
         mHighBitstreamButton.setOnClickListener(mOnHighClickListener);
+        mFluentBitstreamButton = bindViewId(R.id.bt_fluent);
+        mFluentBitstreamButton.setOnClickListener(mOnFluentClickListener);
     }
 
     private View.OnClickListener mOnSuperClickListener = new View.OnClickListener() {
@@ -105,7 +108,14 @@ public class AlbumDetailActivity extends BaseActivity {
         }
     };
 
-    //三个button有共同点,tag设置的id是一样,value值不一样
+    private View.OnClickListener mOnFluentClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            handleButtonClick(v);
+        }
+    };
+
+    //四个button有共同点,tag设置的id是一样,value值不一样
     private void handleButtonClick(View v) {
         Button button =  (Button) v;
         String url = (String) button.getTag(R.id.key_video_url);
@@ -311,12 +321,15 @@ public class AlbumDetailActivity extends BaseActivity {
 
 
     public class StreamType {
+        public static final int FLUENT = 0;
         public static final int SUPER = 1;
         public static final int NORMAL = 2;
         public static final int HIGH = 3;
+
     }
 
     private OnGetVideoPlayUrlListener mVideoUrlListener = new OnGetVideoPlayUrlListener() {
+        //蓝光
         @Override
         public void onGetSuperUrl(final Video video, final String url) {
             Log.d(TAG,">> onGetSuperUrl url " + url + ", video " + video);
@@ -331,6 +344,7 @@ public class AlbumDetailActivity extends BaseActivity {
                 }
             });
         }
+        //高清
         @Override
         public void onGetNoramlUrl(final Video video, final String url) {
             Log.d(TAG,">> onGetNoramlUrl url " + url + ", video " + video);
@@ -346,6 +360,7 @@ public class AlbumDetailActivity extends BaseActivity {
             });
         }
 
+        //超清
         @Override
         public void onGetHighUrl(final Video video, final String url) {
             Log.d(TAG,">> onGetHighUrl url " + url + ", video " + video);
@@ -371,11 +386,28 @@ public class AlbumDetailActivity extends BaseActivity {
                 }
             });
         }
+
+        //流畅
+        @Override
+        public void onGetFluentUrl(Video video, String url) {
+            Log.d(TAG,">> onGetFluentUrl url " + url + ", video " + video);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mFluentBitstreamButton.setVisibility(View.VISIBLE);
+                    mFluentBitstreamButton.setTag(R.id.key_video_url, url); //视频url
+                    mFluentBitstreamButton.setTag(R.id.key_video, video);//视频info
+                    mFluentBitstreamButton.setTag(R.id.key_current_video_number, mCurrentVideoPosition);//当前视频
+                    mFluentBitstreamButton.setTag(R.id.key_video_stream, StreamType.FLUENT); //码流
+                }
+            });
+        }
     };
 
     private void hideAllButton() {
         mSuperBitstreamButton.setVisibility(View.GONE);
         mNormalBitstreamButton.setVisibility(View.GONE);
         mHighBitstreamButton.setVisibility(View.GONE);
+        mFluentBitstreamButton.setVisibility(View.GONE);
     }
 }

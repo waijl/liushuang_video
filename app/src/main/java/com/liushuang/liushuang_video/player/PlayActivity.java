@@ -961,6 +961,10 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
              case AlbumDetailActivity.StreamType.HIGH:
                  mBitStreamView.setText(getResources().getString(R.string.stream_high));
                  break;
+             case AlbumDetailActivity.StreamType.FLUENT:
+                 mBitStreamView.setText("标清");
+                 break;
+
              default:
                  break;
          }

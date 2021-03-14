@@ -39,14 +39,18 @@
 
     <string name="director">导演：</string>
     <string name="mainactor">主演：</string>
-    <string name="btn_phone_super">超清\n播放</string>
-    <string name="btn_phone_normal">标清\n播放</string>
-    <string name="btn_phone_high">高清\n播放</string>
+    <string name="btn_phone_super">蓝光\n播放</string>
+    <string name="btn_phone_normal">高清\n播放</string>
+    <string name="btn_phone_high">超清\n播放</string>
+    <string name="btn_phone_fluent">标清\n播放</string>
+
     <string name="favor_selected">已收藏</string>
     <string name="favor_normal">收藏</string>
-    <string name="stream_super">超清</string>
-    <string name="stream_normal">标清</string>
-    <string name="stream_high">高清</string>
+    <string name="stream_super">蓝光</string>
+    <string name="stream_normal">高清</string>
+    <string name="stream_high">超清</string>
+    <string name="stream_fluent">标清</string>
+
     <string name="live_title">电视节目直播</string>
     <string name="favorite_title">我的收藏</string>
     <string name="action_delete">删除</string>

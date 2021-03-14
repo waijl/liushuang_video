@@ -33,6 +33,7 @@ public class LetvApi extends BaseSiteApi{
     private static final int LETV_CHANNELID_DOCUMENTRY = 16; //乐视纪录片频道ID
     private static final int LETV_CHANNELID_COMIC = 5; //乐视动漫频道ID
     private static final int LETV_CHANNELID_MUSIC = 9; //乐视音乐频道ID
+    private static final int BITSTREAM_FLUENT = 99;
     private static final int BITSTREAM_SUPER = 100;
     private static final int BITSTREAM_NORMAL = 101;
     private static final int BITSTREAM_HIGH = 102;
@@ -337,6 +338,7 @@ public class LetvApi extends BaseSiteApi{
     public void onGetVideoPlayUrl(final Video video, final OnGetVideoPlayUrlListener listener) {
         //args : mid, servertime, key, vid
         final String url = String.format(VIDEO_FILE_URL_FORMAT, video.getMid(), getCurrentServerTime(), getKey(video, getCurrentServerTime()), video.getVid());
+        Log.d(TAG, "onGetVideoPlayUrl: url = " + url);
         OkHttpUtils.excute(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -357,7 +359,23 @@ public class LetvApi extends BaseSiteApi{
                 try {
                     JSONObject resultJson = new JSONObject(result);
                     JSONObject infosJson = resultJson.getJSONObject("body").getJSONObject("videofile").getJSONObject("infos");
+
                     if (infosJson != null) {
+                        JSONObject fluentInfoObject = infosJson.getJSONObject("mp4_180");
+                        if (fluentInfoObject != null) {
+                            String fluentUrl = "";
+                            if (!TextUtils.isEmpty(fluentInfoObject.optString("mainUrl"))) {
+                                fluentUrl = fluentInfoObject.optString("mainUrl");
+                                fluentUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(fluentInfoObject.optString("backUrl1"))) {
+                                fluentUrl = fluentInfoObject.optString("backUrl1");
+                                fluentUrl += VIDEO_REAL_LINK_APPENDIX;
+                            } else if (!TextUtils.isEmpty(fluentInfoObject.optString("backUrl2"))) {
+                                fluentUrl = fluentInfoObject.optString("backUrl2");
+                                fluentUrl += VIDEO_REAL_LINK_APPENDIX;
+                            }
+                            getRealUrl(video, fluentUrl, BITSTREAM_FLUENT, listener);
+                        }
                         JSONObject normalInfoObject = infosJson.getJSONObject("mp4_350");
                         if (normalInfoObject != null) {
                             String normalUrl = "";
@@ -415,6 +433,7 @@ public class LetvApi extends BaseSiteApi{
     //http://play.g3proxy.lecloud.com/vod/v2/MjYwLzkvNTIvbGV0di11dHMvMTQvdmVyXzAwXzIyLTEwOTczMjQ5NzUtYXZjLTE5OTY1OS1hYWMtNDgwMDAtMjU4NjI0MC04Mzk3NjQ4OC04MmQxMGVlM2I3ZTdkMGU5ZjE4YzM1NDViMWI4MzI4Yi0xNDkyNDA2MDE2MTg4Lm1wNA==?b=259&mmsid=64244666&tm=1492847915&key=22f2f114ed643e0d08596659e5834cd6&platid=3&splatid=347&playid=0&tss=ios&vtype=21&cvid=711590995389&payff=0&pip=83611a86979ddb3df8ef0fb41034f39c&format=1&sign=mb&dname=mobile&expect=3&p1=0&p2=00&p3=003&tag=mobile&pid=10031263&format=1&expect=1&termid=2&pay=0&ostype=android&hwtype=iphone
     //解析以上url返回的location字段,即为真实url
     private void getRealUrl(final Video video, String normalUrl, final int type, final OnGetVideoPlayUrlListener listener) {
+        Log.d(TAG, "getRealUrl: realUrl = " + normalUrl);
         OkHttpUtils.excute(normalUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -431,6 +450,12 @@ public class LetvApi extends BaseSiteApi{
                     JSONObject jsonObject = new JSONObject(result);
                     //http://jdplay.lecloud.com/play.videocache.lecloud.com/137/31/87/letv-uts/14/ver_00_22-1136449302-avc-199344-aac-48000-2734080-88713127-639d866ec99b5db4ffcf9155fbdd3924-1609778301939.m3u8?crypt=94aa7f2e97&b=259&nlh=4096&nlt=60&bf=30&p2p=1&video_type=mp4&termid=2&tss=ios&platid=3&splatid=347&its=0&qos=3&fcheck=0&amltag=6&mltag=6&uid=3736582241.rp&keyitem=GOw_33YJAAbXYE-cnQwpfLlv_b2zAkYctFVqe5bsXQpaGNn3T1-vhw..&ntm=1610045400&nkey=a3156405bf9a5aad7819ca82729c0238&nkey2=30baefa1025145a703b636273ea09416&auth_key=1610045400-1-3736582241.rp-3-347-d4df720aed53cfb65109555c34eb74d1&geo=CN-22-20-1&payff=0&m3v=3&sign=mb&cvid=793157047016&playid=0&dname=mobile&hwtype=iphone&tag=mobile&ostype=android&pay=0&vtype=21&tm=1610027009&mmsid=71276987&pid=10057356&p3=003&p2=00&p1=0&key=b029f800c71d65eb0c669b58e35942d8&uidx=0&errc=0&gn=50038&ndtype=2&vrtmcd=106&buss=6&cips=222.183.184.97
                     String realUrl = jsonObject.optString("location");
+                    if (type == BITSTREAM_FLUENT){
+                        video.setFluentUrl(realUrl);
+                        if (listener != null){
+                            listener.onGetFluentUrl(video, realUrl);
+                        }
+                    }
                     if (type == BITSTREAM_NORMAL) {
                         video.setNormalUrl(realUrl);
                         if (listener != null) {

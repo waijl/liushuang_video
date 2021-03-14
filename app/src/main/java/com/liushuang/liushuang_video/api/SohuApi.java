@@ -51,7 +51,7 @@ public class SohuApi extends BaseSiteApi{
     //http://api.tv.sohu.com/v4/video/info/3669315.json?site=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=4.5.1&sysver=4.4.2&partner=47&aid=9112373
     private final static String API_VIDEO_PLAY_URL_FORMAT = "http://api.tv.sohu.com/v4/video/info/%s.json?site=1&plat=6&poid=1&api_key=9854b2afa779e1a6bff1962447a09dbd&sver=4.5.1&sysver=4.4.2&partner=47&aid=%s";
     //真实url格式 m3u8
-    //http://hot.vrs.sohu.com/ipad3669271_4603585256668_6870592.m3u8?plat=6uid=f5dbc7b40dad477c8516885f6c681c01&pt=5&prod=app&pg=1
+    //http://hot.vrs.sohu.com/ipad3669271_4603585256668_6870592.m3u8?plat=6&uid=f5dbc7b40dad477c8516885f6c681c01&pt=5&prod=app&pg=1
     //http://hot.vrs.sohu.com/ipad6785135_4810255502621_9996456.m3u8?plat=6&ssl=2uid=0076fb16fb8b41f5bd9808a60f451fb4&pt=5&prod=app&pg=1
     @Override
     public void onGetChannelAlbums(Channel channel, int pageNum, int pageSize, OnGetChannelAlbumListener listener) {
