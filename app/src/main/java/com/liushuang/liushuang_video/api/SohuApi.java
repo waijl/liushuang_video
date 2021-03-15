@@ -268,31 +268,41 @@ public class SohuApi extends BaseSiteApi{
                 try {
                     JSONObject result = new JSONObject(response.body().string());
                     JSONObject data = result.optJSONObject("data");
-                    String normalUrl = data.optString("url_nor");
-                    if (!TextUtils.isEmpty(normalUrl)) {
-                        normalUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
-                        video.setNormalUrl(normalUrl);
-                        // 通知获取到标清码流url
-                        if (listener != null) {
-                            listener.onGetNoramlUrl(video,normalUrl);
-                        }
-                    }
-                    String superUrl = data.optString("url_super");
+                    //获取蓝光码流url
+                    String superUrl = data.optString("url_blue");
                     if (!TextUtils.isEmpty(superUrl)) {
                         superUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
                         video.setSuperUrl(superUrl);
-                        // 通知获取到超清码流url
+                        // 通知获取到标清码流url
                         if (listener != null) {
                             listener.onGetSuperUrl(video,superUrl);
                         }
                     }
-                    String highUrl = data.optString("url_high");
+                    String fluentUrl = data.optString("url_nor");
+                    if (!TextUtils.isEmpty(fluentUrl)) {
+                        fluentUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        video.setFluentUrl(fluentUrl);
+                        // 通知获取到标清码流url
+                        if (listener != null) {
+                            listener.onGetFluentUrl(video,fluentUrl);
+                        }
+                    }
+                    String highUrl = data.optString("url_super");
                     if (!TextUtils.isEmpty(highUrl)) {
                         highUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
-                        video.setSuperUrl(highUrl);
-                        // 通知获取到高清码流url
+                        video.setHighUrl(highUrl);
+                        // 通知获取到超清码流url
                         if (listener != null) {
                             listener.onGetHighUrl(video,highUrl);
+                        }
+                    }
+                    String normalUrl = data.optString("url_high");
+                    if (!TextUtils.isEmpty(normalUrl)) {
+                        normalUrl += "&uid=" + getUUID() + "&pt=5&prod=app&pg=1";
+                        video.setNormalUrl(normalUrl);
+                        // 通知获取到高清码流url
+                        if (listener != null) {
+                            listener.onGetNoramlUrl(video,normalUrl);
                         }
                     }
                 } catch (JSONException e) {
