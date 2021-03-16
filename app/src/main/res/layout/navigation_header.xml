@@ -5,7 +5,7 @@
     android:id="@+id/ll_navigation_header"
     android:layout_width="match_parent"
     android:layout_height="192dp"
-    android:background="@mipmap/navigation_header_bg"
+    android:background="@mipmap/login_bg"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="16dp"

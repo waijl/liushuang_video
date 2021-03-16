@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.liushuang.liushuang_video.FragmentManagerWrapper;
@@ -20,7 +22,7 @@ import com.liushuang.liushuang_video.base.BaseActivity;
  * 实现了ToolBar与侧滑框DrawerLayout的绑定（单击打开或关闭）
  * 同时在首页Activity中主体实现运用了Fragment,即各个页面的切换仅仅是Fragment的改变
  */
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -28,6 +30,12 @@ public class HomeActivity extends BaseActivity {
     private MenuItem mPreItem;
     private FragmentManager mFragmentManager;
     private Fragment mCurrentFragment;
+    private LinearLayout mMenuHome;
+    private LinearLayout mMenuNovel;
+    private LinearLayout mMenuMe;
+    private HomeFragment mHomeFragment = new HomeFragment();
+    private NovelFragment mNovelFragment = new NovelFragment();
+    private MeFragment mMeFragment = new MeFragment();
 
     @Override
     protected int getLayoutId() {
@@ -42,6 +50,9 @@ public class HomeActivity extends BaseActivity {
 
         mDrawerLayout = bindViewId(R.id.drawer_layout);
         mNavigationView = bindViewId(R.id.navigation_view);
+        mMenuHome = bindViewId(R.id.menu_main);
+        mMenuNovel = bindViewId(R.id.menu_novel);
+        mMenuMe = bindViewId(R.id.menu_me);
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar,R.string.drawer_open,R.string.drawer_close);
         mActionBarDrawerToggle.syncState();
@@ -49,15 +60,24 @@ public class HomeActivity extends BaseActivity {
 
         mPreItem = mNavigationView.getMenu().getItem(0);
         mPreItem.setChecked(true);
+
         initFragment();
         handleNavigationView();
+        mMenuHome.setOnClickListener(this);
+        mMenuNovel.setOnClickListener(this);
+        mMenuMe.setOnClickListener(this);
     }
 
     private void initFragment() {
         mFragmentManager = getSupportFragmentManager();
         mCurrentFragment = FragmentManagerWrapper.getInstance().createFragment(HomeFragment.class);
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fl_main_content, mCurrentFragment);
+        fragmentTransaction
+                .add(R.id.fl_main_content, mCurrentFragment);
+                /*.add(R.id.fl_main_content, mNovelFragment)
+                .hide(mNovelFragment)
+                .add(R.id.fl_main_content, mMeFragment)
+                .hide(mMeFragment);*/
         fragmentTransaction.commit();
     }
 
@@ -104,5 +124,45 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        switch (v.getId()){
+            case R.id.menu_main:
+                switchFragment(HomeFragment.class);
+                /*mCurrentFragment = mHomeFragment;
+                fragmentTransaction
+                        .show(mHomeFragment)
+                        .hide(mNovelFragment)
+                        .hide(mMeFragment);
+                fragmentTransaction.commit();*/
+                mToolBar.setTitle(R.string.home_title);
+
+                break;
+            case R.id.menu_novel:
+                switchFragment(NovelFragment.class);
+//                mCurrentFragment = mNovelFragment;
+                /*fragmentTransaction
+                        .hide(mHomeFragment)
+                        .show(mNovelFragment)
+                        .hide(mMeFragment);
+                fragmentTransaction.commit();*/
+                mToolBar.setTitle(R.string.menu_novel);
+                break;
+            case R.id.menu_me:
+                switchFragment(MeFragment.class);
+//                mCurrentFragment = mMeFragment;
+                /*fragmentTransaction
+                        .hide(mHomeFragment)
+                        .hide(mNovelFragment)
+                        .show(mMeFragment);
+                fragmentTransaction.commit();*/
+                mToolBar.setTitle(R.string.menu_me);
+                break;
+            default:
+                break;
+        }
     }
 }

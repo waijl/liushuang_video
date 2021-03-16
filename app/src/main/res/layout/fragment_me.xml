@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home.MeFragment"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_me_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_300dp"
+        android:background="@mipmap/navigation_header_bg">
+
+        <ImageButton
+            android:id="@+id/btn_login"
+            android:layout_width="@dimen/dimen_200dp"
+            android:layout_height="@dimen/dimen_200dp"
+            android:background="@mipmap/login_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_50dp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_96dp"
+                    android:layout_height="@dimen/dimen_96dp"
+                    android:src="@mipmap/list_my_menu"
+                    android:layout_marginLeft="@dimen/dimen_20dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/dimen_20dp">
+
+                    <TextView
+                        android:id="@+id/tv_my_readlist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/readlist"
+                        android:textSize="@dimen/dimen_48sp"
+                        android:textColor="#000000"
+                        android:paddingTop="@dimen/dimen_36dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_2dp"
+                        android:background="#D8DDE1"
+                        android:layout_below="@id/tv_my_readlist"
+                        android:layout_marginTop="@dimen/dimen_20dp"
+                        android:layout_marginRight="@dimen/dimen_20dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_96dp"
+                    android:layout_height="@dimen/dimen_96dp"
+                    android:src="@mipmap/download"
+                    android:layout_marginLeft="@dimen/dimen_20dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/dimen_20dp">
+
+                    <TextView
+                        android:id="@+id/tv_my_download"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/download_list"
+                        android:textSize="@dimen/dimen_48sp"
+                        android:textColor="#000000"
+                        android:paddingTop="@dimen/dimen_36dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_2dp"
+                        android:background="#D8DDE1"
+                        android:layout_below="@id/tv_my_download"
+                        android:layout_marginTop="@dimen/dimen_20dp"
+                        android:layout_marginRight="@dimen/dimen_20dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_96dp"
+                    android:layout_height="@dimen/dimen_96dp"
+                    android:src="@mipmap/list_setting"
+                    android:layout_marginLeft="@dimen/dimen_20dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/dimen_20dp">
+
+                    <TextView
+                        android:id="@+id/tv_my_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting"
+                        android:textSize="@dimen/dimen_48sp"
+                        android:textColor="#000000"
+                        android:paddingTop="@dimen/dimen_36dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_2dp"
+                        android:background="#D8DDE1"
+                        android:layout_below="@id/tv_my_setting"
+                        android:layout_marginTop="@dimen/dimen_20dp"
+                        android:layout_marginRight="@dimen/dimen_20dp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+
+
+</LinearLayout>

@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
         android:usesCleartextTraffic="true">
-        <activity android:name=".history.HistoryActivity"></activity>
+        <activity android:name=".login.LoginActivity"></activity>
+        <activity android:name=".history.HistoryActivity" />
         <activity android:name=".favorite.FavoriteActivity" />
         <activity android:name=".live.LiveActivity" />
         <activity

@@ -1,6 +1,7 @@
 package com.liushuang.liushuang_video.home;
 
 import android.net.http.SslError;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
@@ -53,6 +54,19 @@ public class BlogFragment extends BaseFragment {
                 //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
                 view.loadUrl(url);
                 return true;
+            }
+        });
+
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //监听到返回键被按下，并且当前网页可被返回
+                if (KeyEvent.KEYCODE_BACK == keyCode && mWebView.canGoBack()) {
+                    mWebView.goBack();
+                    //返回true，交于系统处理
+                    return true;
+                }
+                return false;
             }
         });
 
