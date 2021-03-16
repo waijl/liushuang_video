@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ import android.widget.LinearLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.liushuang.liushuang_video.FragmentManagerWrapper;
 import com.liushuang.liushuang_video.R;
+import com.liushuang.liushuang_video.search.SearchActivity;
 import com.liushuang.liushuang_video.base.BaseActivity;
 
 /**
@@ -66,6 +69,25 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mMenuHome.setOnClickListener(this);
         mMenuNovel.setOnClickListener(this);
         mMenuMe.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_search:
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initFragment() {
