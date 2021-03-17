@@ -4,7 +4,7 @@
 
     <item android:id="@+id/menu_search"
         android:title="搜索"
-        android:icon="@mipmap/search_pic"
+        android:icon="@mipmap/search_picture"
         android:orderInCategory="100"
         app:showAsAction="always" />
 

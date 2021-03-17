@@ -53,7 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/readlist"
-                        android:textSize="@dimen/dimen_48sp"
+                        android:textSize="@dimen/dimen_40sp"
                         android:textColor="#000000"
                         android:paddingTop="@dimen/dimen_36dp" />
 
@@ -90,7 +90,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/download_list"
-                        android:textSize="@dimen/dimen_48sp"
+                        android:textSize="@dimen/dimen_40sp"
                         android:textColor="#000000"
                         android:paddingTop="@dimen/dimen_36dp" />
 
@@ -122,12 +122,12 @@
                     android:gravity="center"
                     android:layout_marginLeft="@dimen/dimen_20dp">
 
-                    <TextView
+                     <TextView
                         android:id="@+id/tv_my_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/setting"
-                        android:textSize="@dimen/dimen_48sp"
+                        android:textSize="@dimen/dimen_40sp"
                         android:textColor="#000000"
                         android:paddingTop="@dimen/dimen_36dp" />
 
