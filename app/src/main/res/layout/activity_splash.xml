@@ -8,4 +8,18 @@
     android:background="@mipmap/splash_pic"
     tools:context=".SplashActivity">
 
+    <TextView
+        android:id="@+id/id_tv_splash"
+        android:layout_width="@dimen/dimen_150dp"
+        android:layout_height="@dimen/dimen_80dp"
+        android:text="跳过 5"
+        android:textSize="@dimen/dimen_44sp"
+        android:textColor="@color/white"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dimen_30dp"
+        android:layout_marginRight="@dimen/dimen_30dp"
+        android:gravity="center"
+        android:background="@drawable/text_splash" />
+
+
 </RelativeLayout>
