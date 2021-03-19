@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.liushuang.liushuang_video.AppManager;
 import com.liushuang.liushuang_video.R;
+import com.liushuang.liushuang_video.book.BookActivity;
 import com.liushuang.liushuang_video.model.book.BookResult;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -56,11 +57,11 @@ public class NovelFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initView();
         initData();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
                 initPermission();
             }
-        }
+        }*/
     }
 
     private void initView() {
@@ -99,16 +100,16 @@ public class NovelFragment extends Fragment {
 
     }
 
-    private void initPermission() {
+    /*private void initPermission() {
         int permission1 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permission2 = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE);
         if (permission1 != PackageManager.PERMISSION_GRANTED && permission2 != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
-        /*if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        *//*if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission_group.STORAGE}, 1);
-        }*/
+        }*//*
     }
 
     @Override
@@ -117,7 +118,7 @@ public class NovelFragment extends Fragment {
         if (requestCode == 1) {
             // TODO: 2021/3/18
         }
-    }
+    }*/
 
     class BookListAdapter extends BaseAdapter {
 
@@ -151,7 +152,7 @@ public class NovelFragment extends Fragment {
 
             holder.mNameTextView.setText(book.getBookname());
 
-//            Android10以上已经过时
+//            Android10以上已经过时(不建议使用)
 //            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/imooc/" + book.getBookname() + ".txt";
 //            String path = getActivity().getFilesDir().getAbsolutePath() + "/book/" + book.getBookname() + ".txt";
 //            File file = new File(getActivity().getExternalFilesDir(null), "/book/" + book.getBookname() + ".txt");
@@ -167,6 +168,7 @@ public class NovelFragment extends Fragment {
                 public void onClick(View v) {
                     if (file.exists()) {
                         // TODO: 2021/3/18
+                        BookActivity.start(getActivity(), path);
                     } else {
                         mClient.addHeader("Accept-Encoding", "identity");
                         mClient.get(book.getBookfile(), new FileAsyncHttpResponseHandler(file) {

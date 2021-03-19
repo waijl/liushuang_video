@@ -1,10 +1,13 @@
 package com.liushuang.liushuang_video;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +16,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.liushuang.liushuang_video.home.HomeActivity;
+import com.liushuang.liushuang_video.utils.PermissionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * app启动时的主入口activity
@@ -26,6 +33,15 @@ public class SplashActivity extends Activity {
     private static final int GO_GUIDE = 2;
     private static final int ENTEER_DURATION = 5000;
     private TextView mTextView;
+    private static List<String> mNeedPermissions = new ArrayList<>();
+    private PermissionUtils mPermissionUtils;
+
+    static {
+        mNeedPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        mNeedPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
+
+
 
     private Handler mHandler = new Handler(){
         @Override
@@ -71,25 +87,39 @@ public class SplashActivity extends Activity {
     };
     private Boolean mIsFirst;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         mTextView = findViewById(R.id.id_tv_splash);
         mSharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
-        init();
-        mTextView.setOnClickListener(new View.OnClickListener() {
+
+        mPermissionUtils = new PermissionUtils(this);
+        mPermissionUtils.request(mNeedPermissions, 100, new PermissionUtils.CallBack() {
             @Override
-            public void onClick(View v) {
-                if (mIsFirst){
-                    startGuideActivity();
-                    mHandler.removeMessages(GO_GUIDE);
-                }else {
-                    startHomeActivity();
-                    mHandler.removeMessages(GO_HOME);
-                }
+            public void grantAll() {
+                init();
+                mTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mIsFirst){
+                            startGuideActivity();
+                            mHandler.removeMessages(GO_GUIDE);
+                        }else {
+                            startHomeActivity();
+                            mHandler.removeMessages(GO_HOME);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void denied() {
+                finish();
             }
         });
+
     }
 
     /**
@@ -121,6 +151,9 @@ public class SplashActivity extends Activity {
         finish();
     }
 
-
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
