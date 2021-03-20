@@ -57,15 +57,18 @@ public class BookActivity extends AppCompatActivity {
     private TextToSpeech mTTS;
     private SeekBar mSeekBar;
     private int mTotalLength;
+    private int i=0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // fullscreen
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        }
+     /*   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }*/
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_book);
 
@@ -95,9 +98,11 @@ public class BookActivity extends AppCompatActivity {
         mHelper.setOnProgressChangedListener(new BookPageBezierHelper.OnProgressChangedListener() {
             @Override
             public void setProgress(int currentLength, int totalLength) {
+                Log.d(TAG, "setProgress: currentLength = " + currentLength + ",totalLength = " + totalLength);
                 mCurrentLength = currentLength;
                 float progress = mCurrentLength * 100 / totalLength;
                 mProgressTextView.setText(String.format("%s%%", progress));
+                mBookPageView.invalidate();
             }
         });
 
@@ -111,14 +116,33 @@ public class BookActivity extends AppCompatActivity {
             }
         });
 
+        mBookPageView.setOnPageChangeListener(new BookPageView.OnPageChangeListener() {
+            @Override
+            public void onPageChange() {
+//                Log.d(TAG, "onPageChange");
+                if (mTTS != null){
+                    if (mTTS.isSpeaking()){
+                        mTTS.stop();
+                        mBookPageView.invalidate();
+                        mTTS.speak(mHelper.getCurrentPageContent(), TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                }
+
+                Log.d(TAG, "onPageChange: mCurrentLength = " + mCurrentLength);
+                float progress = mCurrentLength * 100 / mTotalLength;
+                mProgressTextView.setText(String.format("%s%%", progress));
+                mBookPageView.invalidate();
+
+            }
+        });
         // set recyclerView data.
 
         List<String> settingList = new ArrayList<>();
-        settingList.add("添加书签");
-        settingList.add("读取书签");
-        settingList.add("设置背景");
-        settingList.add("语音朗读");
-        settingList.add("跳转进度");
+        settingList.add("添加\n书签");
+        settingList.add("读取\n书签");
+        settingList.add("设置\n背景");
+        settingList.add("语音\n朗读");
+        settingList.add("跳转\n进度");
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -127,7 +151,7 @@ public class BookActivity extends AppCompatActivity {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                openBookByProgress(R.mipmap.book_bg, seekBar.getProgress()* mTotalLength /100);
+//                openBookByProgress(R.mipmap.book_bg, seekBar.getProgress()* mTotalLength /100);
             }
 
             @Override
@@ -138,6 +162,9 @@ public class BookActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 openBookByProgress(R.mipmap.book_bg, seekBar.getProgress()* mTotalLength /100);
+                mCurrentLength = seekBar.getProgress() * mTotalLength /100;
+                mHelper.setBufferBegin(mCurrentLength);
+                mBookPageView.invalidate();
             }
         });
     }
@@ -195,7 +222,7 @@ public class BookActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             TextView textView = (TextView) holder.itemView;
-            textView.setWidth(240);
+            textView.setWidth(220);
             textView.setHeight(180);
             textView.setTextSize(16);
             textView.setTextColor(Color.WHITE);
@@ -212,9 +239,9 @@ public class BookActivity extends AppCompatActivity {
                     switch (position) {
                         case 0:
                             // add bookmark
-                            // get progress
-                            // save progress to preference.
-                            editor.putInt(BOOKMARK, mCurrentLength);
+                                    // get progress
+                                    // save progress to preference.
+                                    editor.putInt(BOOKMARK, mCurrentLength);
                             editor.apply();
                             break;
                         case 1:
@@ -222,9 +249,15 @@ public class BookActivity extends AppCompatActivity {
                             // reload book to the progress.
                             mLastLength = sharedPreferences.getInt(BOOKMARK, 0);
                             openBookByProgress(R.mipmap.book_bg, mLastLength);
+                            mBookPageView.invalidate();
                             break;
                         case 2:
-                            openBookByProgress(R.mipmap.book_bg2, mLastLength);
+                            if (i++ % 2 == 0){
+                                openBookByProgress(R.mipmap.book_bg2, mLastLength);
+                            }else {
+                                openBookByProgress(R.mipmap.book_bg, mLastLength);
+                            }
+                            mBookPageView.invalidate();
                             break;
                         case 3:
                             if (mTTS == null) {
@@ -236,7 +269,7 @@ public class BookActivity extends AppCompatActivity {
                                             if (result == TextToSpeech.LANG_MISSING_DATA
                                                     || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                                                 Log.e(TAG, "onInit: language is not available.");
-                                                Uri uri = Uri.parse("http://acj2.pc6.com/pc6_soure/2017-6/com.iflytek.vflynote_208.apk");
+                                                Uri uri = Uri.parse("https://bjb.openstorage.cn/v1/iflytek/apkdownload/official/VoiceNote_1291.apk");
                                                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                                                 startActivity(intent);
                                             } else {
@@ -259,6 +292,7 @@ public class BookActivity extends AppCompatActivity {
                             break;
                         case 4:
                             mSeekBar.setVisibility(View.VISIBLE);
+                            mBookPageView.invalidate();
                             break;
                     }
                 }

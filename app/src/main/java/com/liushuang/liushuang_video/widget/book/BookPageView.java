@@ -150,10 +150,10 @@ public class BookPageView extends RelativeLayout {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                boolean isCenterOfX = event.getX() < mViewWidth / 2 + 100
-                        && event.getX() > mViewWidth / 2 - 100;
-                boolean isCenterOfY = event.getY() < mViewHeight / 2 + 150
-                        && event.getY() > mViewHeight / 2 - 150;
+                boolean isCenterOfX = event.getX() < mViewWidth / 2 + 150
+                        && event.getX() > mViewWidth / 2 - 150;
+                boolean isCenterOfY = event.getY() < mViewHeight / 2 + 200
+                        && event.getY() > mViewHeight / 2 - 200;
 
                 if(isCenterOfX && isCenterOfY){
                     if(event.getAction() == MotionEvent.ACTION_UP){
@@ -198,6 +198,8 @@ public class BookPageView extends RelativeLayout {
                             mBookPageBezierHelper.draw(mNextPageCanvas);
                         }
                         setBitmaps(mCurPageBitmap, mNextPageBitmap);
+                        // TODO: 2021/3/20  当翻下一页时或者上一页时，触发监听
+                        mOnPageChangeListener.onPageChange();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         break;
@@ -717,5 +719,15 @@ public class BookPageView extends RelativeLayout {
 
     public interface OnUserNeedSettingListener{
         void onUserNeedSetting();
+    }
+
+    private OnPageChangeListener mOnPageChangeListener;
+
+    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener){
+        mOnPageChangeListener = onPageChangeListener;
+    }
+
+    public interface OnPageChangeListener{
+        void onPageChange();
     }
 }

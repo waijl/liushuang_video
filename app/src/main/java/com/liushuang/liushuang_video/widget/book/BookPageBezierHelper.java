@@ -473,4 +473,8 @@ public class BookPageBezierHelper {
     public String getCurrentPageContent(){
         return mLinesVector.toString();
     }
+
+    public void setBufferBegin(int bufferBegin){
+        mBufferBegin = bufferBegin;
+    }
 }
