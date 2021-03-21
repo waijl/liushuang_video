@@ -157,3 +157,5 @@ public class SplashActivity extends Activity {
         mPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
+
+

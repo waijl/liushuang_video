@@ -25,7 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
         android:usesCleartextTraffic="true">
-        <activity android:name=".book.BookActivity"></activity>
+        <activity android:name=".login.RegisterActivity"></activity>
+        <activity android:name=".book.BookActivity" />
         <activity android:name=".search.SearchActivity" />
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".history.HistoryActivity" />

@@ -3,6 +3,7 @@ package com.liushuang.liushuang_video.utils;
 import com.liushuang.liushuang_video.AppManager;
 
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class OkHttpUtils {

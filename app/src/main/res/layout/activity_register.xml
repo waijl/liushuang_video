@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f3f5f7"
+    tools:context=".login.RegisterActivity">
+
+    <include layout="@layout/top_actionbar" />
+
+    <RelativeLayout
+        android:id="@+id/id_rl_registerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="@dimen/dimen_60dp">
+        <EditText
+            android:id="@+id/id_et_registerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请注册用户名"
+            android:textSize="18sp"
+            android:background="@null"
+            android:inputType="text"
+            android:layout_marginTop="10dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D8DDE1"
+            android:layout_below="@+id/id_et_registerName"
+            android:layout_marginTop="10dp"></View>
+    </RelativeLayout>
+
+
+    <!--密码-->
+    <RelativeLayout
+        android:id="@+id/id_rl_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_registerName"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <EditText
+            android:id="@+id/id_et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请设置密码"
+            android:textSize="18sp"
+            android:background="@null"
+            android:inputType="textWebPassword"
+            android:layout_marginTop="10dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D8DDE1"
+            android:layout_below="@+id/id_et_password"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"></View>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/id_rl_rePassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_rl_password"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <EditText
+            android:id="@+id/id_et_rePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请再次输入密码"
+            android:textSize="18sp"
+            android:background="@null"
+            android:inputType="textWebPassword"
+            android:layout_marginTop="10dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D8DDE1"
+            android:layout_below="@+id/id_et_rePassword"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"></View>
+    </RelativeLayout>
+    <!--注册按钮-->
+    <TextView
+        android:id="@+id/id_btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_110dp"
+        android:text="注册"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_below="@+id/id_rl_rePassword"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_login_background"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        />
+
+</LinearLayout>

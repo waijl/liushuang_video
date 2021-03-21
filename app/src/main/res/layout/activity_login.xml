@@ -13,6 +13,7 @@
         android:layout_height="120dp"
         android:background="#008CC9">
         <ImageView
+            android:id="@+id/id_iv_close"
             android:layout_width="@dimen/dimen_80dp"
             android:layout_height="@dimen/dimen_80dp"
             android:src="@mipmap/login_close"
@@ -48,6 +49,7 @@
             android:hint="请输入登录用户名"
             android:textSize="18sp"
             android:background="@null"
+            android:inputType="text"
             android:layout_marginTop="10dp"/>
         <View
             android:layout_width="match_parent"
@@ -73,6 +75,7 @@
             android:hint="请输入登录密码"
             android:textSize="18sp"
             android:background="@null"
+            android:inputType="textWebPassword"
             android:layout_marginTop="10dp"/>
         <View
             android:layout_width="match_parent"
