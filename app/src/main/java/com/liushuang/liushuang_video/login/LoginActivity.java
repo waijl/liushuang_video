@@ -3,6 +3,7 @@ package com.liushuang.liushuang_video.login;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -10,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liushuang.liushuang_video.AppManager;
 import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.base.BaseActivity;
+import com.liushuang.liushuang_video.home.MeFragment;
+import com.liushuang.liushuang_video.utils.LoginUtils;
 
 public class LoginActivity extends BaseActivity {
 
@@ -24,6 +28,10 @@ public class LoginActivity extends BaseActivity {
 
     private static final String KEY_USERNAME = "key_username";
     private static final String KEY_PASSWORD = "password";
+    public static final String BUNDLE_USERNAME = "bundle_username";
+
+    private LoginUtils mLoginUtils;
+
     private String username;
     private String password;
 
@@ -41,6 +49,7 @@ public class LoginActivity extends BaseActivity {
         mPassword = bindViewId(R.id.edt_pwd);
         mLogin = bindViewId(R.id.btn_login);
         mRegister = bindViewId(R.id.btn_register);
+        mLoginUtils = AppManager.getLoginUtils();
     }
 
     @Override
@@ -79,6 +88,13 @@ public class LoginActivity extends BaseActivity {
                     Toast.makeText(LoginActivity.this, "账号或密码不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }else {
+                    Intent intent = getIntent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(BUNDLE_USERNAME, username);
+                    intent.putExtras(bundle);
+                    setResult(MeFragment.REQUEST_CODE, intent);
+
+                    mLoginUtils.onLogin(username);
                     finish();
                 }
             }

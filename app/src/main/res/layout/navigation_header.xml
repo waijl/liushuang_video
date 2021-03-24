@@ -17,16 +17,17 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/waiwai"
+        android:src="@mipmap/qudenglu1"
         app:border_color="#fff"
         app:border_width="2dp" />
 
     <TextView
+        android:id="@+id/id_tv_myname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:text="未登录"
         android:gravity="center"
-        android:text="歪歪"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#ffffff"
         android:textSize="18sp" />

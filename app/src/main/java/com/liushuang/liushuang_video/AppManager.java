@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.google.gson.Gson;
+import com.liushuang.liushuang_video.utils.LoginUtils;
 
 import okhttp3.OkHttpClient;
 
@@ -15,6 +16,7 @@ public class AppManager extends Application {
     private static Gson mGson;
     private static OkHttpClient mOkHttpClient;
     private static Context mContext;
+    private static LoginUtils mLoginUtils;
 
 
     @Override
@@ -23,6 +25,7 @@ public class AppManager extends Application {
         mGson = new Gson();
         mOkHttpClient = new OkHttpClient();
         mContext = this;
+        mLoginUtils = new LoginUtils();
     }
 
     public static Gson getGson(){
@@ -39,6 +42,10 @@ public class AppManager extends Application {
 
     public static Resources getResource(){
         return mContext.getResources();
+    }
+
+    public static LoginUtils getLoginUtils(){
+        return mLoginUtils;
     }
 
     public static boolean isNetWorkAvailable(){

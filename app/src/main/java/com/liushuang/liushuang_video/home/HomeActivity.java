@@ -13,12 +13,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.liushuang.liushuang_video.AppManager;
 import com.liushuang.liushuang_video.FragmentManagerWrapper;
 import com.liushuang.liushuang_video.R;
+import com.liushuang.liushuang_video.login.HeaderActivity;
+import com.liushuang.liushuang_video.login.OnLoginListener;
+import com.liushuang.liushuang_video.login.OnTouXiangSelectedListener;
 import com.liushuang.liushuang_video.search.SearchActivity;
 import com.liushuang.liushuang_video.base.BaseActivity;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * APP首页
@@ -27,6 +34,7 @@ import com.liushuang.liushuang_video.base.BaseActivity;
  */
 public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final String TAG = "HomeActivity";
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -39,6 +47,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private HomeFragment mHomeFragment = new HomeFragment();
     private NovelFragment mNovelFragment = new NovelFragment();
     private MeFragment mMeFragment = new MeFragment();
+    private CircleImageView mCircleImageView;
+    private TextView mMyname;
 
     @Override
     protected int getLayoutId() {
@@ -56,10 +66,28 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mMenuHome = bindViewId(R.id.menu_main);
         mMenuNovel = bindViewId(R.id.menu_novel);
         mMenuMe = bindViewId(R.id.menu_me);
+//        mCircleImageView = bindViewId(R.id.profile_image);
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar,R.string.drawer_open,R.string.drawer_close);
         mActionBarDrawerToggle.syncState();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
+
+        View headerView = mNavigationView.inflateHeaderView(R.layout.navigation_header);
+        mCircleImageView = headerView.findViewById(R.id.profile_image);
+        mMyname = headerView.findViewById(R.id.id_tv_myname);
+        AppManager.getLoginUtils().setOnLoginListener(new OnLoginListener() {
+            @Override
+            public void onLogin(String username) {
+                mMyname.setText(username);
+                mCircleImageView.setImageResource(R.drawable.waiwai);
+            }
+        });
+        AppManager.getLoginUtils().setOnTouXiangSelectedListener(new OnTouXiangSelectedListener() {
+            @Override
+            public void onTouXiangSelected(int imgId) {
+                mCircleImageView.setImageResource(imgId);
+            }
+        });
 
         mPreItem = mNavigationView.getMenu().getItem(0);
         mPreItem.setChecked(true);
@@ -69,6 +97,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mMenuHome.setOnClickListener(this);
         mMenuNovel.setOnClickListener(this);
         mMenuMe.setOnClickListener(this);
+
     }
 
     @Override
