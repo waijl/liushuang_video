@@ -43,11 +43,13 @@
         <activity
             android:name=".detail.DetailListActivity"
             tools:ignore="Instantiatable" />
-        <activity android:name=".GuideActivity" />
+        <activity android:name=".GuideActivity"
+            android:theme="@style/fullScreen"/>
         <activity
             android:name=".home.HomeActivity"
             tools:ignore="Instantiatable" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"
+            android:theme="@style/fullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

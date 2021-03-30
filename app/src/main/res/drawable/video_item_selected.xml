@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" android:exitFadeDuration="@android:integer/config_shortAnimTime">
-    <item android:drawable="@color/teal_200" android:state_pressed="true" />
-    <item android:drawable="@color/teal_200" android:state_selected="true" />
-    <item android:drawable="@color/teal_200" android:state_activated="true" />
-    <item android:drawable="@color/teal_200" android:state_checked="true" />
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/teal_200" />
+            <corners android:radius="@dimen/dimen_10dp" />
+        </shape>
+    </item>
+
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/teal_200" />
+            <corners android:radius="@dimen/dimen_10dp" />
+        </shape>
+    </item>
+
+    <item android:state_activated="true">
+        <shape>
+            <solid android:color="@color/teal_200" />
+            <corners android:radius="@dimen/dimen_10dp" />
+        </shape>
+    </item>
+    <item android:state_checked="true">
+        <shape>
+            <solid android:color="@color/teal_200" />
+            <corners android:radius="@dimen/dimen_10dp" />
+        </shape>
+    </item>
 
 </selector>

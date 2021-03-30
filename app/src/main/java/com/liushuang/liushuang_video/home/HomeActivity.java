@@ -49,6 +49,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private MeFragment mMeFragment = new MeFragment();
     private CircleImageView mCircleImageView;
     private TextView mMyname;
+    private LinearLayout mPreMenuItem;
 
     @Override
     protected int getLayoutId() {
@@ -63,9 +64,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
         mDrawerLayout = bindViewId(R.id.drawer_layout);
         mNavigationView = bindViewId(R.id.navigation_view);
+
         mMenuHome = bindViewId(R.id.menu_main);
         mMenuNovel = bindViewId(R.id.menu_novel);
         mMenuMe = bindViewId(R.id.menu_me);
+//        mMenuHome.setPressed(true);
+        mMenuHome.setSelected(true);
+        mPreMenuItem = mMenuHome;
 //        mCircleImageView = bindViewId(R.id.profile_image);
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar,R.string.drawer_open,R.string.drawer_close);
@@ -182,6 +187,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         switch (v.getId()){
             case R.id.menu_main:
+                /*mMenuHome.setPressed(true);
+                mMenuNovel.setPressed(false);
+                mMenuMe.setPressed(false);*/
+                mPreMenuItem.setSelected(false);
+                mPreMenuItem = mMenuHome;
+                mMenuHome.setSelected(true);
+
                 switchFragment(HomeFragment.class);
                 /*mCurrentFragment = mHomeFragment;
                 fragmentTransaction
@@ -193,6 +205,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 
                 break;
             case R.id.menu_novel:
+                /*mMenuHome.setPressed(false);
+                mMenuNovel.setPressed(true);
+                mMenuMe.setPressed(false);*/
+                mPreMenuItem.setSelected(false);
+                mPreMenuItem = mMenuNovel;
+                mMenuNovel.setSelected(true);
                 switchFragment(NovelFragment.class);
 //                mCurrentFragment = mNovelFragment;
                 /*fragmentTransaction
@@ -203,6 +221,13 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 mToolBar.setTitle(R.string.menu_novel);
                 break;
             case R.id.menu_me:
+                /*mMenuHome.setPressed(false);
+                mMenuNovel.setPressed(false);
+                mMenuMe.setPressed(true);*/
+
+                mPreMenuItem.setSelected(false);
+                mPreMenuItem = mMenuMe;
+                mMenuMe.setSelected(true);
                 switchFragment(MeFragment.class);
 //                mCurrentFragment = mMeFragment;
                 /*fragmentTransaction
@@ -214,6 +239,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                 break;
             default:
                 break;
+
         }
+
+//        v.setPressed(true);
+//        v.invalidate();
     }
 }
