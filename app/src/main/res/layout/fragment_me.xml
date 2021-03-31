@@ -57,6 +57,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/id_ll_readRecord"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -94,6 +95,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/id_ll_myDownload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -131,6 +133,46 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/id_ll_localVideo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_96dp"
+                    android:layout_height="@dimen/dimen_96dp"
+                    android:src="@mipmap/local_video"
+                    android:layout_marginLeft="@dimen/dimen_20dp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/dimen_20dp">
+
+                     <TextView
+                        android:id="@+id/id_tv_localVideo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/local_video"
+                        android:textSize="@dimen/dimen_40sp"
+                        android:textColor="#000000"
+                        android:paddingTop="@dimen/dimen_36dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_2dp"
+                        android:background="#D8DDE1"
+                        android:layout_below="@id/id_tv_localVideo"
+                        android:layout_marginTop="@dimen/dimen_20dp"
+                        android:layout_marginRight="@dimen/dimen_20dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/id_ll_mySettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -148,7 +190,7 @@
                     android:gravity="center"
                     android:layout_marginLeft="@dimen/dimen_20dp">
 
-                     <TextView
+                    <TextView
                         android:id="@+id/tv_my_setting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -12,15 +12,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.login.HeaderActivity;
 import com.liushuang.liushuang_video.login.LoginActivity;
+import com.liushuang.liushuang_video.video.LocalVideoActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MeFragment extends Fragment {
+public class MeFragment extends Fragment implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 0x01;
     public static final int REQUEST_CODE1 = 0x02;
@@ -29,6 +31,10 @@ public class MeFragment extends Fragment {
     private ImageView mChangeTouXiang;
     private String username;
     private Bundle mBundle;
+    private LinearLayout mLlReadRecord;
+    private LinearLayout mLlMyDownload;
+    private LinearLayout mLlLocalVideo;
+    private LinearLayout mLlMySettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +49,15 @@ public class MeFragment extends Fragment {
         mButton = getView().findViewById(R.id.btn_login);
         mUsername = getView().findViewById(R.id.id_tv_username);
         mChangeTouXiang = getView().findViewById(R.id.id_iv_changeTouXiang);
+        mLlReadRecord = getView().findViewById(R.id.id_ll_readRecord);
+        mLlMyDownload = getView().findViewById(R.id.id_ll_myDownload);
+        mLlLocalVideo = getView().findViewById(R.id.id_ll_localVideo);
+        mLlMySettings = getView().findViewById(R.id.id_ll_mySettings);
 
+        mLlReadRecord.setOnClickListener(this);
+        mLlMyDownload.setOnClickListener(this);
+        mLlLocalVideo.setOnClickListener(this);
+        mLlMySettings.setOnClickListener(this);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,6 +65,7 @@ public class MeFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+
 
     }
 
@@ -84,5 +99,24 @@ public class MeFragment extends Fragment {
 
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.id_ll_readRecord:
+                // TODO: 2021/3/30
+                break;
+            case R.id.id_ll_myDownload:
+                // TODO: 2021/3/30
+                break;
+            case R.id.id_ll_localVideo:
+                LocalVideoActivity.launch(getActivity());
+                break;
+            case R.id.id_ll_mySettings:
+                // TODO: 2021/3/30
+                break;
+
+        }
     }
 }

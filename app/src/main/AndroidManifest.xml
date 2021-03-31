@@ -25,7 +25,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
         android:usesCleartextTraffic="true">
-        <activity android:name=".login.HeaderActivity"></activity>
+        <activity android:name=".player.SystemPlayerActivity"
+            android:theme="@style/fullScreen"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:screenOrientation="landscape"
+            ></activity>
+        <activity android:name=".video.LocalVideoActivity" />
+        <activity android:name=".login.HeaderActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".book.BookActivity" />
         <activity android:name=".search.SearchActivity" />
@@ -43,12 +49,15 @@
         <activity
             android:name=".detail.DetailListActivity"
             tools:ignore="Instantiatable" />
-        <activity android:name=".GuideActivity"
-            android:theme="@style/fullScreen"/>
+        <activity
+            android:name=".GuideActivity"
+            android:theme="@style/fullScreen" />
         <activity
             android:name=".home.HomeActivity"
-            tools:ignore="Instantiatable" />
-        <activity android:name=".SplashActivity"
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|screenSize|orientation"/>
+        <activity
+            android:name=".SplashActivity"
             android:theme="@style/fullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
