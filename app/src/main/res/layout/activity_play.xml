@@ -185,19 +185,30 @@
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_20sp"/>
 
+        <!--<SeekBar
+                android:id="@+id/seekbar_voice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_weight="1"
+                android:maxHeight="6dp"
+                android:minHeight="6dp"
+                android:progressDrawable="@drawable/progress_horizontal" />-->
         <SeekBar
             android:id="@+id/sb_player_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/playerSeekBarStyle"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.0"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
             android:indeterminate="false"
             android:max="100"
             android:progress="0"
             android:paddingRight="@dimen/dimen_10dp"
             android:paddingLeft="@dimen/dimen_10dp"
-            android:thumbOffset="@dimen/dimen_10dp"
+            android:progressDrawable="@drawable/progress_horizontal"
             />
 
         <TextView
