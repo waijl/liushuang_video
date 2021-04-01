@@ -24,6 +24,7 @@
         android:roundIcon="@mipmap/launch_pic"
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
+        android:configChanges="keyboardHidden|screenSize|orientation"
         android:usesCleartextTraffic="true">
         <activity android:name=".player.SystemPlayerActivity"
             android:theme="@style/fullScreen"
@@ -45,10 +46,12 @@
             tools:ignore="Instantiatable" />
         <activity
             android:name=".detail.AlbumDetailActivity"
-            tools:ignore="Instantiatable" />
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|screenSize|orientation"/>
         <activity
             android:name=".detail.DetailListActivity"
-            tools:ignore="Instantiatable" />
+            tools:ignore="Instantiatable"
+            android:configChanges="keyboardHidden|screenSize|orientation"/>
         <activity
             android:name=".GuideActivity"
             android:theme="@style/fullScreen" />

@@ -26,6 +26,7 @@ import com.liushuang.liushuang_video.base.BaseActivity;
 import com.liushuang.liushuang_video.model.media.MediaItem;
 import com.liushuang.liushuang_video.player.SystemPlayerActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,8 +85,17 @@ public class LocalVideoActivity extends BaseActivity {
                 intent.setDataAndType(Uri.parse(mediaItem.getData()), "video/*");
                 startActivity(intent);*/
 
-                Intent intent = new Intent(LocalVideoActivity.this, SystemPlayerActivity.class);
+                //显示调用--调用自己写的播放器
+               /* Intent intent = new Intent(LocalVideoActivity.this, SystemPlayerActivity.class);
                 intent.setDataAndType(Uri.parse(mediaItem.getData()), "video/*");
+                startActivity(intent);*/
+
+                Intent intent = new Intent(LocalVideoActivity.this, SystemPlayerActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("videolist", (Serializable) mediaItems);
+//                intent.putExtra("videolist", (Serializable) mediaItems);
+                intent.putExtras(bundle);
+                intent.putExtra("position",position);
                 startActivity(intent);
 
             }

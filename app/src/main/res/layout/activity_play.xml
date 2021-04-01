@@ -208,7 +208,7 @@
             android:progress="0"
             android:paddingRight="@dimen/dimen_10dp"
             android:paddingLeft="@dimen/dimen_10dp"
-            android:progressDrawable="@drawable/progress_horizontal"
+
             />
 
         <TextView
