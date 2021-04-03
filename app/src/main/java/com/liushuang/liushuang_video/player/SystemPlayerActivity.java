@@ -5,20 +5,26 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 
@@ -26,6 +32,7 @@ import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.model.media.MediaItem;
 import com.liushuang.liushuang_video.utils.DateUtils;
 import com.liushuang.liushuang_video.utils.Utils;
+import com.liushuang.liushuang_video.widget.VideoView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,7 +43,12 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
     public static final int PROGRESS = 1;
     public static final int DELAY_MILLIS = 1000;
     private static final String TAG = "SystemPlayerActivity";
+    public static final int HIDE_MEDIACONTROLLER = 2;
+    public static final int DELAY_MILLIS1 = 5000;
+    private static final int FULL_SCREEN = 1;
+    private static final int DEFAULT_SCREEN = 2;
 
+    private RelativeLayout mMediaController;
     private VideoView mVideoView;
     private Uri mUri;
     private LinearLayout mLlTop;
@@ -55,10 +67,69 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
     private ImageButton mBtnVideoStartPause;
     private ImageButton mBtnVideoNext;
     private ImageButton mBtnVideoSiwchScreen;
+    private LinearLayout mLlBuffer;
 
     private Utils mUtils;
     private int mBatteryLevel;
     private List<MediaItem> mMediaItems;
+    private GestureDetector mGestureDetector;
+    private boolean mIsShowMediaController;
+
+    private boolean mIsUseSystem = true;
+    /**
+     * 是否全屏
+     */
+    private boolean mIsFullScreen = false;
+
+    /**
+     * 屏幕的宽
+     */
+    private int mScreenWidth = 0;
+
+    /**
+     * 屏幕的高
+     */
+    private int mScreenHeight = 0;
+
+    /**
+     * 真实视频的宽
+     */
+    private int mVideoWidth;
+    /**
+     * 真实视频的高
+     */
+    private int mVideoHeight;
+
+
+    /**
+     * 调用声音
+     */
+    private AudioManager mAudioManager;
+
+    /**
+     * 当前的音量
+     */
+    private int mCurrentVoice;
+
+    /**
+     * 0~15
+     * 最大音量
+     */
+    private int mMaxVoice;
+    /**
+     * 是否是静音
+     */
+    private boolean mIsMute = false;
+    /**
+     * 是否是网络uri
+     */
+    private boolean mIsNetUri;
+
+    /**
+     * 上一次的播放进度
+     */
+    private int mPrecurrentPosition;
+
 
     private Handler mHandler = new Handler(){
         @Override
@@ -72,9 +143,37 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
 
                     mTvSystemTime.setText(DateUtils.getCurrentTime());
 
-                    removeMessages(PROGRESS);
+                    //缓冲进度的更新
+                    if (mIsNetUri){
+                        //只有网络资源才能设置缓冲
+                        int bufferPercentage = mVideoView.getBufferPercentage();//0-100
+                        int totalBuffer = bufferPercentage * mSeekbarVideo.getMax();
+                        int secondaryProgress = totalBuffer / 100;
+                        mSeekbarVideo.setSecondaryProgress(secondaryProgress);
+                    }else {
+                        mSeekbarVideo.setSecondaryProgress(0);
+                    }
 
+                    if (!mIsUseSystem){
+                        if (mVideoView.isPlaying()){
+                            int buffer = currentPosition - mPrecurrentPosition;
+                            if (buffer < 500){
+                                mLlBuffer.setVisibility(View.VISIBLE);
+                            }else {
+                                mLlBuffer.setVisibility(View.GONE);
+                            }
+                        }else {
+                            mLlBuffer.setVisibility(View.GONE);
+                        }
+                    }
+                    mPrecurrentPosition = currentPosition;
+
+                    removeMessages(PROGRESS);
                     sendEmptyMessageDelayed(PROGRESS, DELAY_MILLIS);
+                    break;
+
+                case HIDE_MEDIACONTROLLER:
+                    hideMediaController();
                     break;
                 default:
                     break;
@@ -95,6 +194,11 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         }
     };
     private int mPosition;
+    private float mStartY;
+    private int mVol;
+    private int mTouchAllRange;
+    private float mEndY;
+    private float mDistanceY;
 
     private void setCurrentBattery() {
         Log.d(TAG, ">> setCurrentBattery level " + mBatteryLevel);
@@ -132,11 +236,11 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         if (mMediaItems != null && mMediaItems.size() > 0){
             MediaItem mediaItem = mMediaItems.get(mPosition);
             mTvName.setText(mediaItem.getName());
-            // TODO: 2021/4/1
+            mIsNetUri = mUtils.isNetUri(mediaItem.getData());
             mVideoView.setVideoPath(mediaItem.getData());
         }else if (mUri != null){
             mTvName.setText(mUri.toString());
-            // TODO: 2021/4/1
+            mIsNetUri = mUtils.isNetUri(mUri.toString());
             mVideoView.setVideoURI(mUri);
         }else {
             Toast.makeText(this, "帅哥你没有传递数据", Toast.LENGTH_SHORT).show();
@@ -148,20 +252,74 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
     private void getData() {
         mUri = getIntent().getData();
         mMediaItems = (ArrayList<MediaItem>) getIntent().getSerializableExtra("videolist");
-        Log.d(TAG, "getData: mMediaItems = " + mMediaItems.toString());
+//        Log.d(TAG, "getData: mMediaItems = " + mMediaItems.toString());
         mPosition = getIntent().getIntExtra("position", 0);
-        Log.d(TAG, "getData: mPosition = " + mPosition);
+//        Log.d(TAG, "getData: mPosition = " + mPosition);
     }
 
     private void initData() {
         mUtils = new Utils();
         registerReceiver(mBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        mGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+                startAndPause();
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                setFullScreenAndDefault();
+                return super.onDoubleTap(e);
+            }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+
+                if (mIsShowMediaController){
+                    hideMediaController();
+                    mHandler.removeMessages(HIDE_MEDIACONTROLLER);
+                }else {
+                    showMediaController();
+                    mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
+                }
+                return super.onSingleTapConfirmed(e);
+            }
+        });
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        mScreenWidth = displayMetrics.widthPixels;
+        mScreenHeight = displayMetrics.heightPixels;
+
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mCurrentVoice = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        mMaxVoice = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+        mSeekbarVoice.setMax(mMaxVoice);
+        mSeekbarVoice.setProgress(mCurrentVoice);
+        // TODO: 2021/4/3
+
+    }
+
+    private void hideMediaController() {
+
+        mMediaController.setVisibility(View.GONE);
+        mIsShowMediaController = false;
+    }
+
+    private void showMediaController() {
+
+        mMediaController.setVisibility(View.VISIBLE);
+        mIsShowMediaController = true;
     }
 
     private void initEvent() {
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
+                mVideoWidth = mp.getVideoWidth();
+                mVideoHeight = mp.getVideoHeight();
 
                 mVideoView.start();
 
@@ -173,7 +331,10 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
                 mSeekbarVideo.setProgress(currentPosition);
                 mTvCurrentTime.setText(mUtils.stringForTime(currentPosition));
 
+                hideMediaController();
                 mHandler.sendEmptyMessage(PROGRESS);
+
+                setVideoType(DEFAULT_SCREEN);
 
             }
         });
@@ -195,6 +356,29 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
             }
         });
 
+        mSeekbarVoice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser){
+                    if (progress > 0){
+                        mIsMute = false;
+                    }else {
+                        mIsMute = true;
+                    }
+                    updateVoice(progress, mIsMute);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mHandler.removeMessages(HIDE_MEDIACONTROLLER);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
+            }
+        });
         mSeekbarVideo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -205,14 +389,35 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                mHandler.removeMessages(HIDE_MEDIACONTROLLER);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
             }
         });
+
+        if (mIsUseSystem){
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1){
+                mVideoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                    @Override
+                    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                        switch (what){
+                            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                                mLlBuffer.setVisibility(View.VISIBLE);
+                                break;
+
+                            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                                mLlBuffer.setVisibility(View.GONE);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+            }
+        }
         mBtnVoice.setOnClickListener(this);
         mBtnSwichPlayer.setOnClickListener(this);
         mBtnExit.setOnClickListener(this);
@@ -222,8 +427,20 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         mBtnVideoSiwchScreen.setOnClickListener(this);
     }
 
+    private void updateVoice(int progress, boolean mIsMute) {
+        if (mIsMute){
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+            mSeekbarVoice.setProgress(0);
+        }else {
+            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            mSeekbarVoice.setProgress(progress);
+            mCurrentVoice = progress;
+        }
+    }
+
     private void initView() {
 
+        mMediaController = findViewById(R.id.media_controller);
         mVideoView = findViewById(R.id.id_vv_systemPlayer);
         mLlTop = (LinearLayout) findViewById(R.id.ll_top);
         mTvName = (TextView) findViewById(R.id.tv_name);
@@ -241,6 +458,7 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         mBtnVideoStartPause = (ImageButton) findViewById(R.id.btn_video_start_pause);
         mBtnVideoNext = (ImageButton) findViewById(R.id.btn_video_next);
         mBtnVideoSiwchScreen = (ImageButton) findViewById(R.id.btn_video_siwch_screen);
+        mLlBuffer = findViewById(R.id.ll_buffer);
     }
 
 
@@ -249,6 +467,8 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         switch (v.getId()){
             case R.id.btn_voice:
                 // TODO: 2021/3/31
+                mIsMute = !mIsMute;
+                updateVoice(mCurrentVoice, mIsMute);
                 break;
             case R.id.btn_swich_player:
                 // TODO: 2021/3/31
@@ -270,8 +490,47 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
                 break;
             case R.id.btn_video_siwch_screen:
                 // TODO: 2021/3/31
+                setFullScreenAndDefault();
                 break;
             default:
+                break;
+
+        }
+        mHandler.removeMessages(HIDE_MEDIACONTROLLER);
+        mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
+    }
+
+    private void setFullScreenAndDefault() {
+        if (mIsFullScreen){
+            setVideoType(DEFAULT_SCREEN);
+        }else {
+            setVideoType(FULL_SCREEN);
+        }
+
+    }
+
+    private void setVideoType(int defaultScreen) {
+        switch (defaultScreen){
+            case FULL_SCREEN:
+                mVideoView.setVideoSize(mScreenWidth, mScreenHeight);
+                mBtnVideoSiwchScreen.setImageResource(R.drawable.btn_video_siwch_screen_default_selector);
+                mIsFullScreen = true;
+                break;
+            case DEFAULT_SCREEN:
+                int width = mScreenWidth;
+                int height = mScreenHeight;
+                // for compatibility, we adjust size based on aspect ratio
+                if (mVideoWidth * height < width * mVideoHeight) {
+                    //Log.i("@@@", "image too wide, correcting");
+                    width = height * mVideoWidth / mVideoHeight;
+                } else if (mVideoWidth * height > width * mVideoHeight) {
+                    //Log.i("@@@", "image too tall, correcting");
+                    height = width * mVideoHeight / mVideoWidth;
+                }
+
+                mVideoView.setVideoSize(width, height);
+                mBtnVideoSiwchScreen.setImageResource(R.drawable.btn_video_siwch_screen_full_selector);
+                mIsFullScreen = false;
                 break;
 
         }
@@ -286,7 +545,7 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
                 // TODO: 2021/4/1
                 MediaItem mediaItem = mMediaItems.get(mPosition);
                 mTvName.setText(mediaItem.getName());
-                // TODO: 2021/4/1
+                mIsNetUri = mUtils.isNetUri(mediaItem.getData());
                 mVideoView.setVideoPath(mediaItem.getData());
                 //设置按钮状态
                 setButtonState();
@@ -306,7 +565,7 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
                 // TODO: 2021/4/1
                 MediaItem mediaItem = mMediaItems.get(mPosition);
                 mTvName.setText(mediaItem.getName());
-                // TODO: 2021/4/1
+                mIsNetUri = mUtils.isNetUri(mediaItem.getData());
                 mVideoView.setVideoPath(mediaItem.getData());
                 //设置按钮状态
                 setButtonState();
@@ -376,6 +635,58 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
             mVideoView.start();
             mBtnVideoStartPause.setImageResource(R.drawable.btn_video_pause_selector);
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //3.把事件传递给手势识别器
+        mGestureDetector.onTouchEvent(event);
+
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+
+                mStartY = event.getY();
+                mVol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+                mTouchAllRange = Math.min(mScreenWidth, mScreenHeight);
+                mHandler.removeMessages(HIDE_MEDIACONTROLLER);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mEndY = event.getY();
+                mDistanceY = mStartY - mEndY;
+                //改变声音 = （滑动屏幕的距离： 总距离）*音量最大值
+                float delta = (mDistanceY / mTouchAllRange) * mMaxVoice;
+
+                int voice = (int) Math.min(Math.max(mVol + delta, 0), mMaxVoice);
+                if (delta != 0){
+                    mIsMute = false;
+                    updateVoice(voice, mIsMute);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
+                break;
+            default:
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            mCurrentVoice--;
+            updateVoice(mCurrentVoice, false);
+            mHandler.removeMessages(HIDE_MEDIACONTROLLER);
+            mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
+            return true;
+        }else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            mCurrentVoice++;
+            updateVoice(mCurrentVoice, false);
+            mHandler.removeMessages(HIDE_MEDIACONTROLLER);
+            mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

@@ -8,11 +8,17 @@
     android:gravity="center"
     tools:context=".player.SystemPlayerActivity">
 
-    <VideoView
+    <com.liushuang.liushuang_video.widget.VideoView
         android:id="@+id/id_vv_systemPlayer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"/>
 
-    <include layout="@layout/media_controller" />
+    <include
+        android:id="@+id/media_controller"
+        layout="@layout/media_controller" />
+
+    <include
+        android:id="@+id/ll_buffer"
+        layout="@layout/ll_buffer" />
 </RelativeLayout>
