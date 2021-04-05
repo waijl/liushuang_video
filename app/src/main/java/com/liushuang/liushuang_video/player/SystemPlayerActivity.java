@@ -44,9 +44,12 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
     public static final int DELAY_MILLIS = 1000;
     private static final String TAG = "SystemPlayerActivity";
     public static final int HIDE_MEDIACONTROLLER = 2;
+
     public static final int DELAY_MILLIS1 = 5000;
     private static final int FULL_SCREEN = 1;
     private static final int DEFAULT_SCREEN = 2;
+    private static final int SPEED = 3;
+    public static final int DELAY_MILLIS2 = 2000;
 
     private RelativeLayout mMediaController;
     private VideoView mVideoView;
@@ -68,6 +71,10 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
     private ImageButton mBtnVideoNext;
     private ImageButton mBtnVideoSiwchScreen;
     private LinearLayout mLlBuffer;
+    private TextView mTvBufferNetSpeed;
+    private TextView mTvLoadingNetSpeed;
+    private LinearLayout mLlLoading;
+
 
     private Utils mUtils;
     private int mBatteryLevel;
@@ -136,6 +143,15 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case SPEED:
+                    String netSpeed = mUtils.getNetSpeed(SystemPlayerActivity.this);
+
+                    mTvLoadingNetSpeed.setText("玩命加载中..." + netSpeed);
+                    mTvBufferNetSpeed.setText("缓冲中..." + netSpeed);
+
+                    mHandler.removeMessages(SPEED);
+                    mHandler.sendEmptyMessageDelayed(SPEED, DELAY_MILLIS2);
+                    break;
                 case PROGRESS:
                     int currentPosition = mVideoView.getCurrentPosition();
                     mSeekbarVideo.setProgress(currentPosition);
@@ -300,6 +316,8 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         mSeekbarVoice.setProgress(mCurrentVoice);
         // TODO: 2021/4/3
 
+        mHandler.sendEmptyMessage(SPEED);
+
     }
 
     private void hideMediaController() {
@@ -335,6 +353,8 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
                 mHandler.sendEmptyMessage(PROGRESS);
 
                 setVideoType(DEFAULT_SCREEN);
+
+                mLlLoading.setVisibility(View.GONE);
 
             }
         });
@@ -407,7 +427,8 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
                             case MediaPlayer.MEDIA_INFO_BUFFERING_START:
                                 mLlBuffer.setVisibility(View.VISIBLE);
                                 break;
-
+                                
+                            case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                             case MediaPlayer.MEDIA_INFO_BUFFERING_END:
                                 mLlBuffer.setVisibility(View.GONE);
                                 break;
@@ -459,6 +480,9 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         mBtnVideoNext = (ImageButton) findViewById(R.id.btn_video_next);
         mBtnVideoSiwchScreen = (ImageButton) findViewById(R.id.btn_video_siwch_screen);
         mLlBuffer = findViewById(R.id.ll_buffer);
+        mTvBufferNetSpeed = findViewById(R.id.tv_buffer_netspeed);
+        mLlLoading = findViewById(R.id.ll_loading);
+        mTvLoadingNetSpeed = findViewById(R.id.tv_loading_netspeed);
     }
 
 
@@ -542,7 +566,7 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
             mPosition--;
 
             if (mPosition >= 0){
-                // TODO: 2021/4/1
+                mLlLoading.setVisibility(View.VISIBLE);
                 MediaItem mediaItem = mMediaItems.get(mPosition);
                 mTvName.setText(mediaItem.getName());
                 mIsNetUri = mUtils.isNetUri(mediaItem.getData());
@@ -563,6 +587,7 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
 
             if (mPosition < mMediaItems.size()){
                 // TODO: 2021/4/1
+                mLlLoading.setVisibility(View.VISIBLE);
                 MediaItem mediaItem = mMediaItems.get(mPosition);
                 mTvName.setText(mediaItem.getName());
                 mIsNetUri = mUtils.isNetUri(mediaItem.getData());
