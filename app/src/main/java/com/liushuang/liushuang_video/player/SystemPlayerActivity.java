@@ -1,8 +1,10 @@
 package com.liushuang.liushuang_video.player;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -33,6 +35,7 @@ import com.liushuang.liushuang_video.model.media.MediaItem;
 import com.liushuang.liushuang_video.utils.DateUtils;
 import com.liushuang.liushuang_video.utils.Utils;
 import com.liushuang.liushuang_video.widget.VideoView;
+import com.liushuang.liushuang_video.widget.VitamioVideoView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -362,7 +365,8 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                Toast.makeText(SystemPlayerActivity.this, "播放出错了哦", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SystemPlayerActivity.this, "播放出错了哦", Toast.LENGTH_SHORT).show();
+                startVitamioPlayer();
                 return false;
 
             }
@@ -448,6 +452,26 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         mBtnVideoSiwchScreen.setOnClickListener(this);
     }
 
+    private void startVitamioPlayer() {
+        if (mVideoView != null){
+            mVideoView.stopPlayback();
+        }
+
+        Intent intent = new Intent(SystemPlayerActivity.this, VitamioVideoView.class);
+        if (mMediaItems != null && mMediaItems.size() > 0){
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("videolist", (Serializable) mMediaItems);
+            intent.putExtras(bundle);
+
+            intent.putExtra("position", mPosition);
+        }else if (mUri != null){
+            intent.setData(mUri);
+        }
+
+        startActivity(intent);
+        finish();
+    }
+
     private void updateVoice(int progress, boolean mIsMute) {
         if (mIsMute){
             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
@@ -496,6 +520,7 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
                 break;
             case R.id.btn_swich_player:
                 // TODO: 2021/3/31
+                showSwitchPlayerDialog();
                 break;
             case R.id.btn_exit:
                 // TODO: 2021/3/31
@@ -522,6 +547,20 @@ public class SystemPlayerActivity extends Activity implements View.OnClickListen
         }
         mHandler.removeMessages(HIDE_MEDIACONTROLLER);
         mHandler.sendEmptyMessageDelayed(HIDE_MEDIACONTROLLER, DELAY_MILLIS1);
+    }
+
+    private void showSwitchPlayerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SystemPlayerActivity.this);
+        builder.setTitle("系统播放器提醒您：");
+        builder.setMessage("当您播放视频，有声音没有画面的时候，请切换万能播放器播放");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startVitamioPlayer();
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
     }
 
     private void setFullScreenAndDefault() {
