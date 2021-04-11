@@ -48,6 +48,7 @@ public class DetailListFragment extends BaseFragment {
     private int pageSize = 30;
 
     public DetailListFragment() {
+
     }
 
     public static Fragment newInstance(int siteId, int channld) {

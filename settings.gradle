@@ -1,4 +1,3 @@
-include ':vitamio-sample'
 include ':vitamio'
 include ':app'
 rootProject.name = "liushuang_video"

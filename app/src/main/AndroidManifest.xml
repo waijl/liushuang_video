@@ -330,7 +330,9 @@
         <activity android:name=".login.HeaderActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".book.BookActivity" />
-        <activity android:name=".search.SearchActivity" />
+        <activity android:name=".search.SearchActivity"
+            android:theme="@style/fullScreen"
+            android:screenOrientation="landscape"/>
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".history.HistoryActivity" />
         <activity android:name=".favorite.FavoriteActivity" />
