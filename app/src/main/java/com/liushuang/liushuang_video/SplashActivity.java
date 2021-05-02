@@ -46,16 +46,7 @@ public class SplashActivity extends Activity {
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
-            /*switch (msg.what){
-                case GO_GUIDE:
-                    startGuideActivity();
-                    break;
-                case GO_HOME:
-                    startHomeActivity();
-                    break;
-                default:
-                    break;
-            }*/
+
             int time = msg.arg1;
             Log.d(TAG, "handleMessage: time = " + time);
             if (msg.what == GO_GUIDE){

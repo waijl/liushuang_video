@@ -130,8 +130,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_novel">小说</string>
     <string name="menu_me">我的</string>
-    <string name="readlist">我的阅读记录</string>
-    <string name="download_list">我的下载</string>
+    <string name="readlist">我的收藏</string>
+    <string name="download_list">我的历史</string>
     <string name="local_video">本地视频</string>
     <string name="setting">设置</string>
 </resources>

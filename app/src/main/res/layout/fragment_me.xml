@@ -61,12 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                >
 
                 <ImageView
                     android:layout_width="@dimen/dimen_96dp"
                     android:layout_height="@dimen/dimen_96dp"
-                    android:src="@mipmap/list_my_menu"
+                    android:src="@mipmap/waiwai_shoucang2"
                     android:layout_marginLeft="@dimen/dimen_20dp"/>
 
                 <RelativeLayout
@@ -79,10 +80,10 @@
                         android:id="@+id/tv_my_readlist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/dimen_36dp"
                         android:text="@string/readlist"
-                        android:textSize="@dimen/dimen_40sp"
                         android:textColor="#000000"
-                        android:paddingTop="@dimen/dimen_36dp" />
+                        android:textSize="@dimen/dimen_40sp" />
 
                     <View
                         android:layout_width="match_parent"
@@ -104,7 +105,7 @@
                 <ImageView
                     android:layout_width="@dimen/dimen_96dp"
                     android:layout_height="@dimen/dimen_96dp"
-                    android:src="@mipmap/download"
+                    android:src="@mipmap/waiwai_history"
                     android:layout_marginLeft="@dimen/dimen_20dp"/>
 
                 <RelativeLayout
@@ -176,7 +177,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="@dimen/dimen_96dp"

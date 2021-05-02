@@ -62,9 +62,9 @@ public class HomeFragment extends BaseFragment {
                         FavoriteActivity.launch(getActivity());
                         break;
                     case 8:
-                        //跳转历史记录
-                        HistoryActivity.launch(getActivity());
-                        break;
+                            //跳转历史记录
+                            HistoryActivity.launch(getActivity());
+                            break;
                     default:
                         //跳转对应频道
                         DetailListActivity.launchDetailListActivity(getActivity(), position + 1);

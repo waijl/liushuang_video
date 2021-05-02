@@ -14,25 +14,21 @@
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-
-
 
     <application
         android:name=".AppManager"
         android:allowBackup="true"
+        android:configChanges="keyboardHidden|screenSize|orientation"
         android:icon="@mipmap/launch_pic"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/launch_pic"
         android:supportsRtl="true"
         android:theme="@style/Theme.Liushuang_video"
-        android:configChanges="keyboardHidden|screenSize|orientation"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".search.SearchNovelActivity"></activity>
         <!-- Don't forgot InitActivity -->
         <activity
             android:name="io.vov.vitamio.activity.InitActivity"
@@ -40,13 +36,14 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".player.SystemPlayerActivity"
-            android:theme="@style/fullScreen"
+        <activity
+            android:name=".player.SystemPlayerActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:screenOrientation="landscape"
-            >
+            android:theme="@style/fullScreen">
 
-            <!--<intent-filter>
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -69,9 +66,12 @@
                 <data android:mimeType="video/3gp" />
                 <data android:mimeType="video/3gpp" />
                 <data android:mimeType="video/3gpp2" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
 
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
@@ -113,7 +113,8 @@
                 <data android:mimeType="audio/mpegurl"/>
                 <data android:mimeType="application/vnd.apple.mpegurl"/>
                 <data android:mimeType="application/x-mpegurl"/>
-            </intent-filter>-->
+            </intent-filter>
+            -->
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -125,9 +126,11 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="content"/>
-                <data android:scheme="file"/>
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/sdp" />
             </intent-filter>
@@ -143,7 +146,6 @@
                 <data android:mimeType="video/3gpp" />
                 <data android:mimeType="video/3gpp2" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -214,8 +216,9 @@
                 <action android:name="android.intent.action.SENDTO" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="content"/>
-                <data android:scheme="file"/>
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
                 <data android:mimeType="video/*" />
                 <data android:mimeType="application/sdp" />
                 <data android:mimeType="application/octet-stream" />
@@ -285,7 +288,6 @@
                 <data android:pathPattern=".*\\.m4v" />
                 <data android:pathPattern=".*\\.mp4" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -297,32 +299,41 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="rtsp" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="content"/>
-                <data android:scheme="file"/>
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="file" />
                 <data android:mimeType="video/*" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -330,9 +341,10 @@
         <activity android:name=".login.HeaderActivity" />
         <activity android:name=".login.RegisterActivity" />
         <activity android:name=".book.BookActivity" />
-        <activity android:name=".search.SearchActivity"
-            android:theme="@style/fullScreen"
-            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".search.SearchActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/fullScreen" />
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".history.HistoryActivity" />
         <activity android:name=".favorite.FavoriteActivity" />
@@ -343,19 +355,19 @@
             tools:ignore="Instantiatable" />
         <activity
             android:name=".detail.AlbumDetailActivity"
-            tools:ignore="Instantiatable"
-            android:configChanges="keyboardHidden|screenSize|orientation"/>
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".detail.DetailListActivity"
-            tools:ignore="Instantiatable"
-            android:configChanges="keyboardHidden|screenSize|orientation"/>
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".GuideActivity"
             android:theme="@style/fullScreen" />
         <activity
             android:name=".home.HomeActivity"
-            tools:ignore="Instantiatable"
-            android:configChanges="keyboardHidden|screenSize|orientation"/>
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/fullScreen">
@@ -365,11 +377,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".player.VitamioPlayerActivity"
-            android:theme="@style/fullScreen"
+        <activity
+            android:name=".player.VitamioPlayerActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:theme="@style/fullScreen" />
     </application>
 
 </manifest>

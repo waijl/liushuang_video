@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liushuang.liushuang_video.R;
+import com.liushuang.liushuang_video.favorite.FavoriteActivity;
+import com.liushuang.liushuang_video.history.HistoryActivity;
 import com.liushuang.liushuang_video.login.HeaderActivity;
 import com.liushuang.liushuang_video.login.LoginActivity;
 import com.liushuang.liushuang_video.video.LocalVideoActivity;
@@ -31,8 +33,8 @@ public class MeFragment extends Fragment implements View.OnClickListener {
     private ImageView mChangeTouXiang;
     private String username;
     private Bundle mBundle;
-    private LinearLayout mLlReadRecord;
-    private LinearLayout mLlMyDownload;
+    private LinearLayout mLlMyFavorite;
+    private LinearLayout mLlMyHistory;
     private LinearLayout mLlLocalVideo;
     private LinearLayout mLlMySettings;
 
@@ -49,13 +51,13 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         mButton = getView().findViewById(R.id.btn_login);
         mUsername = getView().findViewById(R.id.id_tv_username);
         mChangeTouXiang = getView().findViewById(R.id.id_iv_changeTouXiang);
-        mLlReadRecord = getView().findViewById(R.id.id_ll_readRecord);
-        mLlMyDownload = getView().findViewById(R.id.id_ll_myDownload);
+        mLlMyFavorite = getView().findViewById(R.id.id_ll_readRecord);
+        mLlMyHistory = getView().findViewById(R.id.id_ll_myDownload);
         mLlLocalVideo = getView().findViewById(R.id.id_ll_localVideo);
         mLlMySettings = getView().findViewById(R.id.id_ll_mySettings);
 
-        mLlReadRecord.setOnClickListener(this);
-        mLlMyDownload.setOnClickListener(this);
+        mLlMyFavorite.setOnClickListener(this);
+        mLlMyHistory.setOnClickListener(this);
         mLlLocalVideo.setOnClickListener(this);
         mLlMySettings.setOnClickListener(this);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -106,9 +108,12 @@ public class MeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()){
             case R.id.id_ll_readRecord:
                 // TODO: 2021/3/30
+                //跳转收藏
+                FavoriteActivity.launch(getActivity());
                 break;
             case R.id.id_ll_myDownload:
-                // TODO: 2021/3/30
+                //跳转历史记录
+                HistoryActivity.launch(getActivity());
                 break;
             case R.id.id_ll_localVideo:
                 LocalVideoActivity.launch(getActivity());

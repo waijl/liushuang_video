@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +15,14 @@
         android:layout_marginLeft="@dimen/dimen_5dp"
         android:layout_marginRight="@dimen/dimen_5dp" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/id_fab_searchNovel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="35dp"
+        android:layout_marginBottom="@dimen/dimen_160dp"
+        android:layout_gravity="bottom|right"
+        android:src="@mipmap/search_picture" />
 
 
-</LinearLayout>
+</FrameLayout>

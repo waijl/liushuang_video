@@ -9,7 +9,7 @@
         android:id="@+id/id_iv_bookImage"
         android:layout_width="@dimen/dimen_180dp"
         android:layout_height="@dimen/dimen_140dp"
-        android:src="@mipmap/book"
+        android:src="@mipmap/novel_book"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/dimen_2dp" />
 

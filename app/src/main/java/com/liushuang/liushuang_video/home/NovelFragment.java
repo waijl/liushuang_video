@@ -1,6 +1,7 @@
 package com.liushuang.liushuang_video.home;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,10 +24,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.liushuang.liushuang_video.AppManager;
 import com.liushuang.liushuang_video.R;
 import com.liushuang.liushuang_video.book.BookActivity;
 import com.liushuang.liushuang_video.model.book.BookResult;
+import com.liushuang.liushuang_video.search.SearchNovelActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
@@ -40,6 +43,7 @@ import cz.msebera.android.httpclient.entity.mime.Header;
 public class NovelFragment extends Fragment {
 
     private static final String TAG = "NovelFragment";
+    private FloatingActionButton mSearchNovel;
     private ListView mListView;
     private List<BookResult.Book> mBookList;
     private AsyncHttpClient mClient;
@@ -65,12 +69,21 @@ public class NovelFragment extends Fragment {
     }
 
     private void initView() {
+
+        mSearchNovel = getView().findViewById(R.id.id_fab_searchNovel);
         mListView = getView().findViewById(R.id.id_lv_bookList);
     }
 
 
     private void initData() {
 
+        mSearchNovel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SearchNovelActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
         mClient = new AsyncHttpClient();
         mClient.get(URL_BOOKLIST, new AsyncHttpResponseHandler() {
 
